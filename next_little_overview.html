@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Next Little — Product Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --terra:   #C4694F;
+  --sage:    #7A9E7E;
+  --indigo:  #4A5A8C;
+  --salmon:  #D4917F;
+  --cream:   #FAF6F0;
+  --bg:      #EDE4D7;
+  --dark:    #231C12;
+  --mid:     #7A6E60;
+  --light:   #A49080;
+  --border:  #E0D6C8;
+  --white:   #ffffff;
+}
+
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 0;
+  padding: 0 32px;
+}
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 24px 14px 0;
+  border-right: 1px solid var(--border);
+  margin-right: 24px; flex-shrink: 0;
+}
+.header-logo span {
+  font-size: 17px; font-weight: 900; color: var(--dark); letter-spacing: -0.4px;
+}
+nav { display: flex; gap: 2px; }
+.tab-btn {
+  padding: 10px 18px;
+  border: none; background: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--light); border-radius: 8px;
+  transition: all 0.15s;
+}
+.tab-btn:hover { background: var(--cream); color: var(--dark); }
+.tab-btn.active { background: var(--cream); color: var(--terra); font-weight: 700; }
+.header-tag {
+  margin-left: auto; font-size: 11px; font-weight: 700;
+  background: var(--cream); color: var(--terra);
+  padding: 5px 12px; border-radius: 99px;
+  border: 1.5px solid #E8C4B4; letter-spacing: 0.04em;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.page { display: none; animation: fadeIn 0.2s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 48px 32px; }
+.section-title {
+  font-size: 11px; font-weight: 700; color: var(--light);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px;
+}
+.page-heading {
+  font-size: 34px; font-weight: 900; color: var(--dark);
+  letter-spacing: -0.8px; margin-bottom: 8px; line-height: 1.1;
+}
+.page-sub {
+  font-size: 16px; color: var(--mid); line-height: 1.65;
+  max-width: 600px; margin-bottom: 48px;
+}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+/* ── OVERVIEW ────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--terra) 0%, #D4856A 100%);
+  border-radius: 24px; padding: 56px 48px;
+  display: flex; align-items: center; gap: 48px;
+  margin-bottom: 40px;
+}
+.hero-text h1 {
+  font-size: 44px; font-weight: 900; color: #fff;
+  letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px;
+}
+.hero-text p {
+  font-size: 17px; color: rgba(255,255,255,0.85);
+  line-height: 1.65; max-width: 460px;
+}
+.hero-logo { flex-shrink: 0; }
+.pillar-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.pillar-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 14px;
+}
+.pillar-card h3 { font-size: 15px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.pillar-card p  { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+.stat-strip {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 32px;
+  display: flex; gap: 0; margin-bottom: 40px;
+}
+.stat-item {
+  flex: 1; text-align: center;
+  border-right: 1px solid var(--border);
+  padding: 0 20px;
+}
+.stat-item:last-child { border-right: none; }
+.stat-item .num { font-size: 28px; font-weight: 900; color: var(--dark); }
+.stat-item .lbl { font-size: 12px; color: var(--light); margin-top: 3px; font-weight: 600; }
+
+/* ── BRAND ───────────────────────────────────────────────── */
+.color-swatch {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.swatch-block { height: 80px; }
+.swatch-info { padding: 12px 14px; background: var(--white); }
+.swatch-name { font-size: 12px; font-weight: 800; color: var(--dark); }
+.swatch-hex  { font-size: 11px; color: var(--light); font-weight: 600; font-family: monospace; margin-top: 2px; }
+.swatch-use  { font-size: 10px; color: var(--light); margin-top: 4px; line-height: 1.4; }
+
+.type-sample {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 24px; margin-bottom: 12px;
+}
+.type-label { font-size: 10px; font-weight: 700; color: var(--light); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+
+.principle-card {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 22px;
+}
+.principle-card h4 { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.principle-card p  { font-size: 12px; color: var(--mid); line-height: 1.6; }
+
+/* ── FEATURES ────────────────────────────────────────────── */
+.feature-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 22px;
+}
+.feature-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px; flex-shrink: 0;
+}
+.feature-card h3 { font-size: 14px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.feature-card p  { font-size: 12px; color: var(--mid); line-height: 1.6; }
+.feature-tag {
+  display: inline-block; margin-top: 10px;
+  font-size: 10px; font-weight: 700; padding: 3px 9px;
+  border-radius: 99px; border: 1px solid var(--border);
+  color: var(--light);
+}
+.cat-header {
+  display: flex; align-items: center; gap: 10px;
+  margin: 32px 0 16px;
+}
+.cat-header .cat-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.cat-header span { font-size: 12px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ── WORKFLOWS ───────────────────────────────────────────── */
+.workflow-block {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px 28px 24px;
+  margin-bottom: 24px;
+}
+.workflow-block h3 {
+  font-size: 16px; font-weight: 800; color: var(--dark);
+  margin-bottom: 4px;
+}
+.workflow-block .wf-sub {
+  font-size: 12px; color: var(--mid); margin-bottom: 24px; line-height: 1.5;
+}
+.flow-row {
+  display: flex; align-items: flex-start; gap: 0;
+  overflow-x: auto; padding-bottom: 8px;
+}
+.flow-step {
+  display: flex; flex-direction: column; align-items: center;
+  flex: 1; min-width: 100px; text-align: center; position: relative;
+}
+.flow-step-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 10px; flex-shrink: 0;
+  border: 2px solid var(--border); background: var(--cream);
+  position: relative; z-index: 2;
+}
+.flow-step-label { font-size: 12px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+.flow-step-sub   { font-size: 10px; color: var(--light); margin-top: 3px; line-height: 1.4; }
+.flow-arrow {
+  flex-shrink: 0; width: 32px; display: flex; align-items: center;
+  justify-content: center; margin-top: 10px; color: var(--border);
+  font-size: 18px;
+}
+.flow-step.done   .flow-step-circle { background: var(--sage);    border-color: var(--sage);    color: #fff; }
+.flow-step.active .flow-step-circle { background: var(--terra);   border-color: var(--terra);   color: #fff; }
+.flow-step.next   .flow-step-circle { background: #EAF0EA;        border-color: var(--sage);    color: var(--sage); }
+.flow-step.pending .flow-step-circle { background: var(--cream);  border-color: var(--border);  color: var(--light); }
+
+.wf-legend {
+  display: flex; gap: 16px; margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid var(--border); flex-wrap: wrap;
+}
+.wf-leg-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--mid); font-weight: 600;
+}
+.wf-leg-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* ── SCREENS ─────────────────────────────────────────────── */
+.screens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+.phone-frame {
+  background: var(--white);
+  border-radius: 24px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  aspect-ratio: 9/16;
+  display: flex; flex-direction: column;
+  cursor: default;
+}
+.pf-notch {
+  width: 50px; height: 4px; background: var(--border);
+  border-radius: 3px; margin: 8px auto 0;
+  flex-shrink: 0;
+}
+.pf-status {
+  display: flex; justify-content: space-between;
+  padding: 4px 10px 2px;
+  font-size: 7px; color: var(--light); font-weight: 700; flex-shrink: 0;
+}
+.pf-body { flex: 1; overflow: hidden; }
+.pf-label {
+  text-align: center; font-size: 11px; font-weight: 700;
+  color: var(--mid); margin-top: 10px; letter-spacing: 0.02em;
+}
+
+/* phone screen content blocks */
+.pb { border-radius: 5px; margin: 0 8px 4px; }
+.pb-header { background: var(--terra); height: 42px; border-radius: 0; margin: 0 0 6px; }
+.pb-card   { background: var(--white); height: 20px; border: 1px solid var(--border); border-radius: 5px; margin: 0 8px 4px; }
+.pb-card-tall { height: 36px; }
+.pb-card-med  { height: 28px; }
+.pb-label  { background: var(--cream); height: 6px; border-radius: 3px; margin: 4px 12px 2px; }
+.pb-label-short { width: 40%; }
+.pb-chip   { display: inline-block; background: var(--sage); height: 10px; width: 38px; border-radius: 99px; margin: 2px 3px; }
+.pb-chip-off { background: var(--border); }
+.pb-tabbar { background: var(--white); height: 22px; border-top: 1px solid var(--border); margin-top: auto; flex-shrink: 0; display: flex; align-items: center; justify-content: space-around; padding: 0 6px; }
+.pb-tab-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+.pb-tab-dot.active { background: var(--terra); }
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 36px 0; }
+
+/* ── PILL BADGE ──────────────────────────────────────────── */
+.pill {
+  display: inline-block; padding: 4px 10px;
+  border-radius: 99px; font-size: 11px; font-weight: 700;
+}
+.pill-green  { background: #EAF0EA; color: #3A6A3A; }
+.pill-terra  { background: #FAE8E3; color: var(--terra); }
+.pill-indigo { background: #E8EAF4; color: var(--indigo); }
+
+@media (max-width: 768px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .hero { flex-direction: column; padding: 32px 24px; gap: 24px; }
+  .hero-text h1 { font-size: 32px; }
+  .container { padding: 32px 20px; }
+  header { padding: 0 16px; }
+  .stat-strip { flex-direction: column; gap: 16px; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 0; }
+  .stat-item:last-child { border-bottom: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <svg width="44" height="28" viewBox="0 0 100 62" fill="none">
+      <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+      <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+      <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+    </svg>
+    <span>Next Little</span>
+  </div>
+  <nav>
+    <button class="tab-btn active" onclick="showPage('overview', this)">Overview</button>
+    <button class="tab-btn" onclick="showPage('brand', this)">Brand</button>
+    <button class="tab-btn" onclick="showPage('features', this)">Features</button>
+    <button class="tab-btn" onclick="showPage('workflows', this)">Workflows</button>
+    <button class="tab-btn" onclick="showPage('screens', this)">Screens</button>
+  </nav>
+  <div class="header-tag">v1 Prototype</div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE: OVERVIEW                                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Pass it on.<br>Help the next little one.</h1>
+      <p>Next Little is an invite-only app that connects trusted parents in a size-based chain — so baby clothes, gear, and toys always find the next family who needs them.</p>
+      <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;">
+        <span class="pill" style="background:rgba(255,255,255,0.2);color:#fff;font-size:12px;">Invite-only</span>
+        <span class="pill" style="background:rgba(255,255,255,0.2);color:#fff;font-size:12px;">Size-based matching</span>
+        <span class="pill" style="background:rgba(255,255,255,0.2);color:#fff;font-size:12px;">Community first</span>
+      </div>
+    </div>
+    <div class="hero-logo">
+      <svg width="120" height="76" viewBox="0 0 100 62" fill="none">
+        <circle cx="28" cy="31" r="26" fill="rgba(255,255,255,0.22)"/>
+        <circle cx="57" cy="31" r="20" fill="rgba(255,255,255,0.18)"/>
+        <circle cx="78" cy="31" r="14" fill="rgba(255,255,255,0.15)"/>
+        <circle cx="28" cy="31" r="26" fill="#fff" fill-opacity="0.10" stroke="#fff" stroke-opacity="0.4" stroke-width="1.5"/>
+        <circle cx="57" cy="31" r="20" stroke="#fff" stroke-opacity="0.3" stroke-width="1.5"/>
+        <circle cx="78" cy="31" r="14" stroke="#fff" stroke-opacity="0.25" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="stat-strip">
+    <div class="stat-item"><div class="num">3</div><div class="lbl">Circle types (clothing, gear, toys)</div></div>
+    <div class="stat-item"><div class="num">1</div><div class="lbl">Invite code per member</div></div>
+    <div class="stat-item"><div class="num">0</div><div class="lbl">Items wasted in a working chain</div></div>
+    <div class="stat-item"><div class="num">∞</div><div class="lbl">Families that can benefit</div></div>
+  </div>
+
+  <!-- 3 pillars -->
+  <div class="section-title">What makes it work</div>
+  <div class="grid-3" style="margin-bottom:40px;">
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:#FAE8E3;">🔗</div>
+      <h3>The Size Chain</h3>
+      <p>Kids are slotted by actual clothing size, not just age. When you post an item, it goes directly to the next family in line — no marketplace browsing, no bidding, no waste.</p>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:#EAF0EA;">🌿</div>
+      <h3>Trusted by Design</h3>
+      <p>Every parent is vouched for by an existing member. Invite-only access creates accountability and safety throughout the whole chain — you only interact with people you're connected to.</p>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-icon" style="background:#E8EAF4;">💬</div>
+      <h3>Frictionless Passing</h3>
+      <p>Post, notify, accept, coordinate — the whole flow is in-app. Auto-generated messages, pickup coordination, and receipt confirmation keep things moving without the back-and-forth.</p>
+    </div>
+  </div>
+
+  <!-- Who it's for -->
+  <div class="divider"></div>
+  <div class="section-title">Who it's for</div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size:22px;margin-bottom:12px;">👶</div>
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:8px;">Parents with babies &amp; toddlers (0–4y)</h3>
+      <p style="font-size:13px;color:var(--mid);line-height:1.6;">Families who are swimming in outgrown 3-month onesies and could really use the 12M stuff their neighbor's kid just grew out of. They care about sustainability, community, and not spending $200 on clothes a kid wears for 6 weeks.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:22px;margin-bottom:12px;">🌱</div>
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:8px;">Community-minded neighborhood parents</h3>
+      <p style="font-size:13px;color:var(--mid);line-height:1.6;">They already share tips in a group chat, do buy-nothing group exchanges, and know other parents in the neighborhood. Next Little gives that informal network a structure that actually works at scale.</p>
+    </div>
+  </div>
+
+</div>
+</div><!-- /overview -->
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE: BRAND                                                -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-brand">
+<div class="container">
+
+  <div class="page-heading">Brand</div>
+  <p class="page-sub">Warm, organic, and trusted. The visual language of Next Little is built around natural textures, human warmth, and intentional simplicity.</p>
+
+  <!-- Logo mark -->
+  <div class="section-title">Logo mark</div>
+  <div class="card" style="display:flex;align-items:center;gap:48px;margin-bottom:32px;flex-wrap:wrap;">
+    <div style="text-align:center;">
+      <div style="background:var(--cream);border-radius:16px;padding:32px 40px;display:inline-block;margin-bottom:12px;">
+        <svg width="100" height="62" viewBox="0 0 100 62" fill="none">
+          <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+          <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+          <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+        </svg>
+      </div>
+      <div style="font-size:11px;color:var(--light);font-weight:600;">On cream</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="background:#C4694F;border-radius:16px;padding:32px 40px;display:inline-block;margin-bottom:12px;">
+        <svg width="100" height="62" viewBox="0 0 100 62" fill="none">
+          <circle cx="28" cy="31" r="26" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="57" cy="31" r="20" fill="rgba(255,255,255,0.20)"/>
+          <circle cx="78" cy="31" r="14" fill="rgba(255,255,255,0.17)"/>
+        </svg>
+      </div>
+      <div style="font-size:11px;color:var(--light);font-weight:600;">On terracotta</div>
+    </div>
+    <div style="flex:1;min-width:220px;">
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:10px;color:var(--dark);">What it means</h3>
+      <p style="font-size:13px;color:var(--mid);line-height:1.7;">Three overlapping circles represent three generations passing items forward — largest (oldest) on the left, smallest (newest) on the right. The decreasing size tells the story visually: things naturally move from bigger to smaller. The overlap shows connection and community.</p>
+    </div>
+  </div>
+
+  <!-- Logotype note -->
+  <div style="background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;gap:16px;">
+    <div>
+      <div style="font-size:28px;font-weight:900;color:var(--dark);letter-spacing:-0.5px;line-height:1;">Next Little</div>
+      <div style="font-size:11px;color:var(--light);margin-top:4px;font-weight:600;">Display: Danish Cookies OTF · Fallback: Georgia, serif</div>
+    </div>
+    <div style="margin-left:auto;padding-left:24px;border-left:1px solid var(--border);">
+      <p style="font-size:12px;color:var(--mid);line-height:1.6;max-width:300px;">Danish Cookies is a handwritten serif with playful irregularity — warm without being childish, artisanal without being precious. It signals community and care.</p>
+    </div>
+  </div>
+
+  <!-- Color palette -->
+  <div class="section-title">Color palette</div>
+  <div class="grid-4" style="margin-bottom:16px;">
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#C4694F;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Terracotta</div>
+        <div class="swatch-hex">#C4694F</div>
+        <div class="swatch-use">Primary · CTAs · You marker · Active states</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#7A9E7E;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Sage</div>
+        <div class="swatch-hex">#7A9E7E</div>
+        <div class="swatch-use">Secondary · Confirmed states · Community markers</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#4A5A8C;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Indigo</div>
+        <div class="swatch-hex">#4A5A8C</div>
+        <div class="swatch-use">Accent · Chain gradient end · Depth</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#D4917F;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Warm Salmon</div>
+        <div class="swatch-hex">#D4917F</div>
+        <div class="swatch-use">Chain gradient start · Soft highlights</div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-4" style="margin-bottom:40px;">
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#FAF6F0;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Warm Cream</div>
+        <div class="swatch-hex">#FAF6F0</div>
+        <div class="swatch-use">App background · Cards · Input fields</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#EDE4D7;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Sand</div>
+        <div class="swatch-hex">#EDE4D7</div>
+        <div class="swatch-use">Page background · Outer chrome</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#231C12;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Espresso</div>
+        <div class="swatch-hex">#231C12</div>
+        <div class="swatch-use">Primary text · Headings · High-contrast UI</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#E0D6C8;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Warm Border</div>
+        <div class="swatch-hex">#E0D6C8</div>
+        <div class="swatch-use">Dividers · Card borders · Inactive states</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chain gradient -->
+  <div class="section-title">Chain gradient — member avatars</div>
+  <div class="card" style="margin-bottom:40px;">
+    <p style="font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.6;">Members in the size chain are colored along a gradient from warm salmon (newest/smallest) to indigo (oldest/largest). This gives the chain a visual story — you can see at a glance where you sit in the sequence.</p>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:#D4917F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;">NB</div>
+      <div style="flex:1;height:4px;background:linear-gradient(to right,#D4917F,#C4694F,#8A7AAC,#4A5A8C);border-radius:2px;"></div>
+      <div style="width:40px;height:40px;border-radius:50%;background:#4A5A8C;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;">2T</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+      <span style="font-size:10px;color:var(--light);font-weight:600;">Newest · Smallest</span>
+      <span style="font-size:10px;color:var(--light);font-weight:600;">Oldest · Largest</span>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="section-title">Typography</div>
+  <div class="type-sample">
+    <div class="type-label">Display / Logotype — Danish Cookies</div>
+    <div style="font-size:36px;color:var(--dark);letter-spacing:-0.5px;line-height:1.1;">Next Little</div>
+    <div style="font-size:13px;color:var(--light);margin-top:6px;">Used for: App name, splashscreen, celebratory moments</div>
+  </div>
+  <div class="type-sample">
+    <div class="type-label">UI / Body — Nunito (Google Fonts, free)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:baseline;">
+      <span style="font-size:28px;font-weight:900;color:var(--dark);">900 Heavy</span>
+      <span style="font-size:22px;font-weight:800;color:var(--dark);">800 ExtraBold</span>
+      <span style="font-size:18px;font-weight:700;color:var(--dark);">700 Bold</span>
+      <span style="font-size:16px;font-weight:600;color:var(--mid);">600 SemiBold</span>
+      <span style="font-size:14px;font-weight:500;color:var(--mid);">500 Medium</span>
+      <span style="font-size:13px;font-weight:400;color:var(--light);">400 Regular</span>
+    </div>
+    <div style="font-size:13px;color:var(--light);margin-top:10px;">Used for: All UI text, navigation, body copy, labels</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Design principles -->
+  <div class="section-title">Design principles</div>
+  <div class="grid-2">
+    <div class="principle-card">
+      <h4>🌿 Warm, not cutesy</h4>
+      <p>The app is for adults dealing with real parenting logistics. It should feel like a trusted neighborhood resource — not a toy store. Avoid bright primary colors, childish patterns, or overly playful copy.</p>
+    </div>
+    <div class="principle-card">
+      <h4>🔗 Chain first</h4>
+      <p>Every design decision should reinforce the core mechanic: items move through a chain of people. The chain metaphor should be present and legible — visually and in copy — throughout the experience.</p>
+    </div>
+    <div class="principle-card">
+      <h4>✓ Trust is earned, shown</h4>
+      <p>The UI should make trust visible. Vouched badges, verified markers, member history, and groups in common all reinforce that this isn't a stranger marketplace — it's a community of people you're connected to.</p>
+    </div>
+    <div class="principle-card">
+      <h4>📐 Friction has a purpose</h4>
+      <p>The condition check, invite codes, and receipt confirmation aren't obstacles — they're quality signals. Friction is used intentionally to ensure every pass meets the community standard.</p>
+    </div>
+  </div>
+
+</div>
+</div><!-- /brand -->
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE: FEATURES                                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-features">
+<div class="container">
+
+  <div class="page-heading">Features</div>
+  <p class="page-sub">Every feature is built around a single idea: make it easy for the right items to reach the right family at the right time.</p>
+
+  <!-- Onboarding & Trust -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:var(--indigo);"></div>
+    <span>Onboarding &amp; Trust</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#E8EAF4;">💌</div>
+      <h3>Invite-only access</h3>
+      <p>Every new member needs a unique invite code from an existing member. Codes are single-use and tied to the inviter — creating a web of accountability from day one.</p>
+      <span class="feature-tag">Onboarding</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">🌿</div>
+      <h3>Invited-by verification</h3>
+      <p>When a code is entered, the app shows who invited you — name, location, member since date — before you continue. Transparency before commitment.</p>
+      <span class="feature-tag">Trust</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FAE8E3;">👶</div>
+      <h3>Baby profile + size detection</h3>
+      <p>Enter your baby's birth month/year and the app automatically calculates their current age and default size. Parents can override if their kid is wearing ahead or behind their age.</p>
+      <span class="feature-tag">Profile</span>
+    </div>
+  </div>
+
+  <!-- The Chain -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:var(--terra);"></div>
+    <span>The Size Chain</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FAE8E3;">📏</div>
+      <h3>Size-based placement</h3>
+      <p>Kids are slotted in the chain by clothing size, not age. If your 6-month-old is wearing 12M, they're placed in the 12M slot — items fit, not just calendar-match.</p>
+      <span class="feature-tag">Matching</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FAE8E3;">🎨</div>
+      <h3>Gradient chain view</h3>
+      <p>The full chain is displayed vertically with gradient-colored avatars — warm salmon for the smallest/newest, indigo for the oldest/largest. Instantly scannable and visually meaningful.</p>
+      <span class="feature-tag">Chain</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FAE8E3;">🔀</div>
+      <h3>Sort by age or size</h3>
+      <p>Toggle the chain view between "by age" and "by size" — for parents who think in months vs. parents who shop by size label. Both views show parent name + kid details.</p>
+      <span class="feature-tag">Chain</span>
+    </div>
+  </div>
+
+  <!-- Passing an Item -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:var(--sage);"></div>
+    <span>Passing an Item</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">📦</div>
+      <h3>Category-aware post form</h3>
+      <p>Posting adapts by category: Clothing shows size + quantity chips; Gear/Toys/Books show age range; "For the mama" has no size fields. Each path is lean and purpose-built.</p>
+      <span class="feature-tag">Post</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">📸</div>
+      <h3>3-photo upload</h3>
+      <p>One main photo, two supporting shots. Clear, well-lit photos help items move faster. The layout guides parents toward a hero shot + detail shots naturally.</p>
+      <span class="feature-tag">Post</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">✅</div>
+      <h3>Condition confirmation gate</h3>
+      <p>Before posting, parents confirm: "This item is clean, undamaged, and in good condition." Single checkbox at the end of the form. The post CTA stays locked until it's checked.</p>
+      <span class="feature-tag">Quality</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">🏘️</div>
+      <h3>Group-scoped posting</h3>
+      <p>Post to all your groups at once, or pick a specific group. Useful when an item is local-pickup only, or when it's more relevant for one neighborhood than another.</p>
+      <span class="feature-tag">Groups</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">🎉</div>
+      <h3>Post confirmation + notified list</h3>
+      <p>After posting, parents see exactly who was notified — name, size, location, group — so they know the item is in motion. Transparency that builds confidence.</p>
+      <span class="feature-tag">Post</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#EAF0EA;">📍</div>
+      <h3>Local pickup or ship</h3>
+      <p>Each post specifies how it'll be passed — local pickup or ship/mail. Matches users to their stated preferences at the profile level too.</p>
+      <span class="feature-tag">Logistics</span>
+    </div>
+  </div>
+
+  <!-- Receiving -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:var(--indigo);"></div>
+    <span>Receiving an Item</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#E8EAF4;">🔔</div>
+      <h3>Accept / decline flow</h3>
+      <p>When something is available for your little one, you get a "For you" card on the home screen and an alert in Notifications. One tap to accept, one to decline — no ambiguity.</p>
+      <span class="feature-tag">Receive</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#E8EAF4;">💬</div>
+      <h3>Auto-populated message thread</h3>
+      <p>Accepting an item instantly creates a message thread with the poster — pre-loaded with the item context card. No "hi!" cold open — just straight to coordination.</p>
+      <span class="feature-tag">Messaging</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#E8EAF4;">📬</div>
+      <h3>Receipt confirmation</h3>
+      <p>After pickup or delivery, the receiver confirms: "I got it, it's as described." Two checkboxes, then "Mark as received" — which notifies the poster and moves the chain forward.</p>
+      <span class="feature-tag">Tracking</span>
+    </div>
+  </div>
+
+  <!-- Groups & Community -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:#A49080;"></div>
+    <span>Groups &amp; Community</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--cream);">🌱</div>
+      <h3>Create a group</h3>
+      <p>Name your group, set a neighborhood, then invite parents via text, link, or WhatsApp. The creator becomes admin. Groups form the social fabric of each chain.</p>
+      <span class="feature-tag">Groups</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--cream);">📍</div>
+      <h3>Location-gated nearby groups</h3>
+      <p>Enable location to see active parent groups within walking distance. Locked by default — privacy first, then opt-in discovery when you're ready to expand your network.</p>
+      <span class="feature-tag">Discovery</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--cream);">👥</div>
+      <h3>Suggested groups</h3>
+      <p>Groups where you have mutual members show up as suggestions. "3 mutual" gives instant social proof — you're not joining a stranger community, you're joining your extended circle.</p>
+      <span class="feature-tag">Discovery</span>
+    </div>
+  </div>
+
+  <!-- Tracking & Alerts -->
+  <div class="cat-header">
+    <div class="cat-dot" style="background:#F0D4A0;"></div>
+    <span>Tracking &amp; Alerts</span>
+  </div>
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FEF6EC;">📊</div>
+      <h3>Active pass tracker</h3>
+      <p>My Posts shows a real-time status bar for each active pass: Posted → Claimed → In Transit → Received. Parents always know where their item is in the chain.</p>
+      <span class="feature-tag">Tracking</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FEF6EC;">📅</div>
+      <h3>Size nudges</h3>
+      <p>"Is Mateo still in 12M?" The app checks in periodically to confirm current size. Keeping sizes accurate means the chain stays accurate — good matches for everyone downstream.</p>
+      <span class="feature-tag">Smart alerts</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#FEF6EC;">🎂</div>
+      <h3>Milestone pass prompts</h3>
+      <p>When your baby hits an age milestone, the app nudges: "Mateo is 6 months — ready to pass on some 9–12M items?" Proactive, not nagging. Timely without being annoying.</p>
+      <span class="feature-tag">Smart alerts</span>
+    </div>
+  </div>
+
+</div>
+</div><!-- /features -->
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE: WORKFLOWS                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-workflows">
+<div class="container">
+
+  <div class="page-heading">Workflows</div>
+  <p class="page-sub">The four core user journeys in Next Little. Each is designed to minimize decisions while maximizing trust at every handoff.</p>
+
+  <!-- Legend -->
+  <div class="card" style="margin-bottom:32px;">
+    <div style="font-size:12px;font-weight:700;color:var(--mid);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">Step states</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">✓</div><span style="font-size:12px;color:var(--mid);font-weight:600;">Completed</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:var(--terra);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">→</div><span style="font-size:12px;color:var(--mid);font-weight:600;">Active / current</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#EAF0EA;border:2px solid var(--sage);display:flex;align-items:center;justify-content:center;color:var(--sage);font-size:12px;">○</div><span style="font-size:12px;color:var(--mid);font-weight:600;">Up next</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--light);font-size:12px;">○</div><span style="font-size:12px;color:var(--mid);font-weight:600;">Pending</span></div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW 1: Passing an item -->
+  <div class="workflow-block">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:#FAE8E3;display:flex;align-items:center;justify-content:center;font-size:15px;">📦</div>
+      <h3>Passing an Item</h3>
+    </div>
+    <div class="wf-sub">The poster's journey — from deciding to pass something on to the item being confirmed received by the next family.</div>
+    <div class="flow-row">
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Post item</div>
+        <div class="flow-step-sub">Category, size, photos, description</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Confirm condition</div>
+        <div class="flow-step-sub">Single checkbox gate</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Chain notified</div>
+        <div class="flow-step-sub">Matching families alerted</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step active">
+        <div class="flow-step-circle">→</div>
+        <div class="flow-step-label">Parent accepts</div>
+        <div class="flow-step-sub">Next in line claims item</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step next">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Coordinate</div>
+        <div class="flow-step-sub">Auto-message thread opens</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step pending">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Received ✓</div>
+        <div class="flow-step-sub">Receipt confirmed, chain moves</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px 14px;background:#FEF6EC;border-radius:10px;border-left:3px solid #F0D4A0;">
+      <span style="font-size:12px;color:#8A6010;font-weight:600;">⚡ Fallback: </span>
+      <span style="font-size:12px;color:#8A6010;">If no one in the chain claims the item within 48h, the poster gets a "No takers" nudge with nearby charity suggestions.</span>
+    </div>
+  </div>
+
+  <!-- WORKFLOW 2: Receiving an item -->
+  <div class="workflow-block">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:#EAF0EA;display:flex;align-items:center;justify-content:center;font-size:15px;">📬</div>
+      <h3>Receiving an Item</h3>
+    </div>
+    <div class="wf-sub">The receiver's journey — from seeing an available item to confirming it's in their hands and the chain can continue.</div>
+    <div class="flow-row">
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Alert received</div>
+        <div class="flow-step-sub">Home card + Alerts tab</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Accept / decline</div>
+        <div class="flow-step-sub">One tap to decide</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step active">
+        <div class="flow-step-circle">→</div>
+        <div class="flow-step-label">Message thread</div>
+        <div class="flow-step-sub">Auto-opened with context card</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step next">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Arrange pickup</div>
+        <div class="flow-step-sub">Local or shipped</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step pending">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Confirm receipt</div>
+        <div class="flow-step-sub">2-checkbox confirmation</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px 14px;background:#EAF0EA;border-radius:10px;border-left:3px solid var(--sage);">
+      <span style="font-size:12px;color:#3A6A3A;font-weight:600;">✓ Chain continues: </span>
+      <span style="font-size:12px;color:#3A6A3A;">Once receipt is confirmed, the item is marked as passed, the poster is notified, and the receiver's chain position is noted for future passes.</span>
+    </div>
+  </div>
+
+  <!-- WORKFLOW 3: Onboarding -->
+  <div class="workflow-block">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:#E8EAF4;display:flex;align-items:center;justify-content:center;font-size:15px;">🌱</div>
+      <h3>Joining the Community</h3>
+    </div>
+    <div class="wf-sub">The new member journey — from receiving an invite to being placed in the chain and seeing their first home screen.</div>
+    <div class="flow-row">
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Enter invite code</div>
+        <div class="flow-step-sub">Verifies inviter identity</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Baby details</div>
+        <div class="flow-step-sub">Name, birthdate, size</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Set preferences</div>
+        <div class="flow-step-sub">Categories, style, pass method</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step active">
+        <div class="flow-step-circle">→</div>
+        <div class="flow-step-label">Placed in chain</div>
+        <div class="flow-step-sub">Smart size-based slot</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step pending">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Welcome!</div>
+        <div class="flow-step-sub">First home screen, ready to go</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px 14px;background:#E8EAF4;border-radius:10px;border-left:3px solid var(--indigo);">
+      <span style="font-size:12px;color:var(--indigo);font-weight:600;">📏 Smart slotting: </span>
+      <span style="font-size:12px;color:var(--indigo);">If the baby is wearing ahead of their age, the app notes this and slots them in the right size position — not the default age-based position.</span>
+    </div>
+  </div>
+
+  <!-- WORKFLOW 4: Groups -->
+  <div class="workflow-block">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--cream);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;">🏘️</div>
+      <h3>Building a Group</h3>
+    </div>
+    <div class="wf-sub">How neighborhood groups form — from a single parent creating a group to a full chain operating within it.</div>
+    <div class="flow-row">
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Create group</div>
+        <div class="flow-step-sub">Name + neighborhood</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step done">
+        <div class="flow-step-circle">✓</div>
+        <div class="flow-step-label">Invite parents</div>
+        <div class="flow-step-sub">Text, link, or WhatsApp</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step active">
+        <div class="flow-step-circle">→</div>
+        <div class="flow-step-label">Members join</div>
+        <div class="flow-step-sub">Each placed in shared chain</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step next">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">First post</div>
+        <div class="flow-step-sub">Item shared to group</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step pending">
+        <div class="flow-step-circle">○</div>
+        <div class="flow-step-label">Chain flows</div>
+        <div class="flow-step-sub">Self-sustaining community</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full system map -->
+  <div class="section-title" style="margin-top:8px;">Full system — how screens connect</div>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;text-align:center;">
+
+      <div style="padding:16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Entry</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Splash</div>
+          <div style="font-size:16px;color:var(--border);">↓</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Invite Gate</div>
+          <div style="font-size:16px;color:var(--border);">↓</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Onboarding 1–3</div>
+          <div style="font-size:16px;color:var(--border);">↓</div>
+          <div style="background:#EAF0EA;border:1px solid var(--sage);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#3A6A3A;width:100%;">Welcome</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Core (Tab Bar)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+          <div style="background:#FAE8E3;border:1px solid var(--terra);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--terra);width:100%;">Home</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Post (pass it on)</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Chains</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Messages</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Alerts</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;border-bottom:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Detail Screens</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Member Profile</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Post Confirmation</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Message Thread</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Confirm Receipt</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;border-right:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Profile / Settings</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Settings</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Edit Profile</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">My Posts</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">My Groups</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;border-right:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Groups</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Groups Browser</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">Create Group</div>
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);width:100%;">My Groups</div>
+        </div>
+      </div>
+
+      <div style="padding:16px;">
+        <div style="font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Total screens</div>
+        <div style="font-size:44px;font-weight:900;color:var(--dark);line-height:1;">23</div>
+        <div style="font-size:12px;color:var(--light);margin-top:4px;">screens in v1 prototype</div>
+        <div style="margin-top:16px;">
+          <span class="pill pill-green" style="margin-bottom:4px;display:inline-block;">All linked</span><br>
+          <span class="pill pill-terra" style="margin-top:4px;display:inline-block;">Interactive</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div><!-- /workflows -->
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE: SCREENS                                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-screens">
+<div class="container">
+
+  <div class="page-heading">Screens</div>
+  <p class="page-sub">Wireframe overview of the 23 screens in the v1 prototype. Each screen is fully interactive — <strong><a href="next_little_v4.html" style="color:var(--terra);">open the live prototype →</a></strong></p>
+
+  <!-- Onboarding group -->
+  <div class="section-title">Onboarding</div>
+  <div class="screens-grid" style="margin-bottom:40px;">
+
+    <!-- Splash -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;">
+          <svg width="52" height="34" viewBox="0 0 100 62" fill="none" style="margin-bottom:8px;">
+            <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+            <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+            <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+          </svg>
+          <div style="height:8px;background:#231C12;border-radius:3px;width:80px;margin-bottom:6px;opacity:0.8;"></div>
+          <div style="height:5px;background:#E0D6C8;border-radius:3px;width:100px;margin-bottom:3px;"></div>
+          <div style="height:5px;background:#E0D6C8;border-radius:3px;width:80px;margin-bottom:24px;"></div>
+          <div style="height:18px;background:#C4694F;border-radius:99px;width:100%;margin-bottom:6px;"></div>
+          <div style="height:18px;background:transparent;border:1.5px solid #E0D6C8;border-radius:99px;width:100%;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Splash</div>
+    </div>
+
+    <!-- Invite Gate -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:8px 8px;">
+          <div style="height:6px;background:#E0D6C8;border-radius:3px;width:70%;margin-bottom:4px;"></div>
+          <div style="height:5px;background:#E0D6C8;border-radius:3px;width:90%;margin-bottom:3px;opacity:0.5;"></div>
+          <div style="height:5px;background:#E0D6C8;border-radius:3px;width:80%;margin-bottom:10px;opacity:0.5;"></div>
+          <div style="height:14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:5px;margin-bottom:6px;"></div>
+          <div style="height:14px;background:#C4694F;border-radius:99px;width:100%;margin-bottom:10px;"></div>
+          <div style="height:28px;background:#EAF0EA;border-radius:8px;border:1.5px solid #C8D4C8;display:flex;align-items:center;padding:4px;gap:4px;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#EAF0EA;border:1px solid #C8D4C8;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:4px;background:#3A6A3A;border-radius:2px;width:60%;margin-bottom:2px;"></div><div style="height:3px;background:#C8D4C8;border-radius:2px;width:80%;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pf-label">Invite Gate</div>
+    </div>
+
+    <!-- Onboarding 1 -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:6px 8px;">
+          <div style="height:7px;background:#231C12;border-radius:3px;width:60%;margin-bottom:4px;"></div>
+          <div style="height:5px;background:#E0D6C8;border-radius:3px;width:85%;margin-bottom:8px;opacity:0.5;"></div>
+          <div style="height:3px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:14px;background:#F5F0E8;border:1px solid #CEC4B4;border-radius:5px;margin-bottom:4px;"></div>
+          <div style="height:3px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:14px;background:#F5F0E8;border:1px solid #CEC4B4;border-radius:5px;margin-bottom:4px;"></div>
+          <div style="height:3px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:14px;background:#F5F0E8;border:1px solid #7A9E7E;border-radius:5px;margin-bottom:8px;"></div>
+          <div style="height:14px;background:#C4694F;border-radius:99px;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Baby Details</div>
+    </div>
+
+    <!-- Onboarding 2 -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:6px 8px;">
+          <div style="height:7px;background:#231C12;border-radius:3px;width:55%;margin-bottom:6px;"></div>
+          <div style="height:3px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;">
+            <div style="height:10px;width:38px;background:#7A9E7E;border-radius:99px;"></div>
+            <div style="height:10px;width:32px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:36px;background:#E0D6C8;border-radius:99px;"></div>
+          </div>
+          <div style="height:3px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;">
+            <div style="height:10px;width:32px;background:#7A9E7E;border-radius:99px;"></div>
+            <div style="height:10px;width:28px;background:#7A9E7E;border-radius:99px;"></div>
+            <div style="height:10px;width:34px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:30px;background:#E0D6C8;border-radius:99px;"></div>
+          </div>
+          <div style="height:14px;background:#C4694F;border-radius:99px;margin-top:8px;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Preferences</div>
+    </div>
+
+    <!-- Welcome -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;">
+          <svg width="40" height="26" viewBox="0 0 100 62" fill="none" style="margin-bottom:8px;">
+            <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+            <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+            <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+          </svg>
+          <div style="height:7px;background:#231C12;border-radius:3px;width:80%;margin-bottom:4px;"></div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:95%;margin-bottom:2px;opacity:0.5;"></div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:85%;margin-bottom:14px;opacity:0.5;"></div>
+          <div style="height:16px;background:#C4694F;border-radius:99px;width:100%;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Welcome!</div>
+    </div>
+
+  </div>
+
+  <!-- Core screens -->
+  <div class="section-title">Core — Tab Bar</div>
+  <div class="screens-grid" style="margin-bottom:40px;">
+
+    <!-- Home -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-body" style="display:flex;flex-direction:column;">
+          <div style="background:#C4694F;padding:8px 8px 14px;">
+            <div style="height:7px;background:rgba(255,255,255,0.8);border-radius:3px;width:70%;margin-bottom:3px;"></div>
+            <div style="height:5px;background:rgba(255,255,255,0.5);border-radius:3px;width:55%;"></div>
+          </div>
+          <div style="background:white;border-radius:10px;margin:-6px 6px 6px;padding:8px;border:1px solid #E0D6C8;">
+            <div style="height:4px;background:#E0D6C8;border-radius:3px;width:60%;margin-bottom:6px;opacity:0.5;"></div>
+            <div style="display:flex;justify-content:center;gap:6px;align-items:center;">
+              <div style="width:22px;height:22px;border-radius:50%;background:#7A9E7E;"></div>
+              <div style="width:6px;height:6px;background:#E0D6C8;border-radius:50%;"></div>
+              <div style="width:28px;height:28px;border-radius:50%;background:#C4694F;border:2px solid white;box-shadow:0 0 0 2px #FAE8E3;"></div>
+              <div style="width:6px;height:6px;background:#E0D6C8;border-radius:50%;"></div>
+              <div style="width:22px;height:22px;border-radius:50%;background:#4A5A8C;"></div>
+            </div>
+          </div>
+          <div style="padding:0 6px;flex:1;">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:6px;">
+              <div style="height:22px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+              <div style="height:22px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+              <div style="height:22px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+            </div>
+            <div style="height:4px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:3px;opacity:0.5;"></div>
+            <div style="height:22px;background:white;border:1.5px solid #C4694F;border-radius:6px;margin-bottom:3px;"></div>
+            <div style="height:16px;background:#FEF6EC;border:1px solid #F0D4A0;border-radius:6px;margin-bottom:3px;"></div>
+            <div style="height:16px;background:#EAF0EA;border:1px solid #C8D8C8;border-radius:6px;"></div>
+          </div>
+          <div class="pb-tabbar">
+            <div class="pb-tab-dot active"></div>
+            <div class="pb-tab-dot"></div>
+            <div style="width:18px;height:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="16" height="10" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="22" fill="#E0D6C8"/><circle cx="57" cy="31" r="17" fill="#E0D6C8"/><circle cx="78" cy="31" r="12" fill="#E0D6C8"/></svg>
+            </div>
+            <div class="pb-tab-dot"></div>
+            <div class="pb-tab-dot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pf-label">Home</div>
+    </div>
+
+    <!-- Post -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;">
+            <div style="height:10px;width:38px;background:#7A9E7E;border-radius:99px;"></div>
+            <div style="height:10px;width:26px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:30px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:32px;background:#E0D6C8;border-radius:99px;"></div>
+          </div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:25%;margin-bottom:3px;opacity:0.5;"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;">
+            <div style="height:10px;width:28px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:32px;background:#E0D6C8;border-radius:99px;"></div>
+            <div style="height:10px;width:36px;background:#C4694F;border-radius:99px;"></div>
+            <div style="height:10px;width:26px;background:#E0D6C8;border-radius:99px;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:4px;height:32px;margin-bottom:6px;">
+            <div style="background:#FEF8F5;border:1.5px dashed #C4694F;border-radius:6px;"></div>
+            <div style="display:flex;flex-direction:column;gap:3px;"><div style="flex:1;background:#FAF6F0;border:1px dashed #E0D6C8;border-radius:4px;"></div><div style="flex:1;background:#FAF6F0;border:1px dashed #E0D6C8;border-radius:4px;"></div></div>
+          </div>
+          <div style="height:10px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:5px;margin-bottom:4px;"></div>
+          <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:6px;padding:4px 6px;display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#7A9E7E;flex-shrink:0;"></div>
+            <div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div>
+          </div>
+          <div style="height:12px;background:#C4694F;border-radius:99px;opacity:0.4;"></div>
+        </div>
+        <div class="pb-tabbar">
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot active"></div>
+          <div style="width:18px;height:10px;display:flex;align-items:center;justify-content:center;"><svg width="16" height="10" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="22" fill="#E0D6C8"/><circle cx="57" cy="31" r="17" fill="#E0D6C8"/><circle cx="78" cy="31" r="12" fill="#E0D6C8"/></svg></div>
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot"></div>
+        </div>
+      </div>
+      <div class="pf-label">Pass It On</div>
+    </div>
+
+    <!-- Chain -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="display:flex;gap:3px;margin-bottom:6px;">
+            <div style="flex:1;height:12px;background:#C4694F;border-radius:99px;"></div>
+            <div style="flex:1;height:12px;background:#F5EDE8;border-radius:99px;"></div>
+          </div>
+          <div style="position:relative;padding-left:14px;">
+            <div style="position:absolute;left:6px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#D4917F44,#4A5A8C44);border-radius:1px;"></div>
+            <!-- chain members simplified -->
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#D4917F;flex-shrink:0;"></div>
+              <div style="flex:1;height:14px;background:white;border:1px solid #E8DFD4;border-radius:5px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#C4917F;flex-shrink:0;"></div>
+              <div style="flex:1;height:14px;background:white;border:1px solid #E8DFD4;border-radius:5px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#B07090;flex-shrink:0;"></div>
+              <div style="flex:1;height:14px;background:white;border:1px solid #E8DFD4;border-radius:5px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <div style="width:20px;height:20px;border-radius:50%;background:#C4694F;flex-shrink:0;box-shadow:0 0 0 2px #FAE8E3;"></div>
+              <div style="flex:1;height:16px;background:linear-gradient(135deg,#FAE8E3,#FEF0E8);border:1.5px solid #C4694F;border-radius:5px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#7070A0;flex-shrink:0;"></div>
+              <div style="flex:1;height:14px;background:white;border:1px solid #E8DFD4;border-radius:5px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <div style="width:18px;height:18px;border-radius:50%;background:#4A5A8C;flex-shrink:0;"></div>
+              <div style="flex:1;height:14px;background:white;border:1px solid #E8DFD4;border-radius:5px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pb-tabbar">
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot"></div>
+          <div style="width:18px;height:10px;display:flex;align-items:center;justify-content:center;"><svg width="16" height="10" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="22" fill="#C4694F"/><circle cx="57" cy="31" r="17" fill="#C4694F"/><circle cx="78" cy="31" r="12" fill="#C4694F"/></svg></div>
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot"></div>
+        </div>
+      </div>
+      <div class="pf-label">Size Chain</div>
+    </div>
+
+    <!-- Messages -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="height:6px;background:#231C12;border-radius:3px;width:50%;margin-bottom:8px;opacity:0.8;"></div>
+          <div style="display:flex;align-items:center;gap:4px;padding:6px 0;border-bottom:1px solid #F0E8DC;margin-bottom:3px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#C4694F;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:4px;background:#231C12;border-radius:2px;width:60%;margin-bottom:3px;opacity:0.7;"></div><div style="height:3px;background:#E0D6C8;border-radius:2px;width:80%;"></div></div>
+            <div style="width:6px;height:6px;border-radius:50%;background:#C4694F;flex-shrink:0;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;padding:6px 0;border-bottom:1px solid #F0E8DC;margin-bottom:3px;opacity:0.7;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#7A9E7E;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:4px;background:#231C12;border-radius:2px;width:40%;margin-bottom:3px;opacity:0.7;"></div><div style="height:3px;background:#E0D6C8;border-radius:2px;width:70%;"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;padding:6px 0;opacity:0.5;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#4A5A8C;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:4px;background:#231C12;border-radius:2px;width:35%;margin-bottom:3px;opacity:0.7;"></div><div style="height:3px;background:#E0D6C8;border-radius:2px;width:60%;"></div></div>
+          </div>
+        </div>
+        <div class="pb-tabbar">
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot"></div>
+          <div style="width:18px;height:10px;display:flex;align-items:center;justify-content:center;"><svg width="16" height="10" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="22" fill="#E0D6C8"/><circle cx="57" cy="31" r="17" fill="#E0D6C8"/><circle cx="78" cy="31" r="12" fill="#E0D6C8"/></svg></div>
+          <div class="pb-tab-dot active"></div>
+          <div class="pb-tab-dot"></div>
+        </div>
+      </div>
+      <div class="pf-label">Messages</div>
+    </div>
+
+    <!-- Alerts -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="height:6px;background:#231C12;border-radius:3px;width:30%;margin-bottom:8px;opacity:0.8;"></div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:25%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:32px;background:white;border:1.5px solid #C4694F;border-radius:6px;margin-bottom:4px;padding:4px 6px;">
+            <div style="height:3px;background:#C4694F;border-radius:2px;width:75%;margin-bottom:2px;opacity:0.6;"></div>
+            <div style="height:3px;background:#E0D6C8;border-radius:2px;width:90%;margin-bottom:2px;"></div>
+            <div style="display:flex;gap:3px;margin-top:2px;"><div style="flex:1;height:7px;background:#C4694F;border-radius:99px;"></div><div style="flex:1;height:7px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:99px;"></div></div>
+          </div>
+          <div style="height:16px;background:white;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;"></div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:25%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:14px;background:white;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;opacity:0.8;"></div>
+          <div style="height:14px;background:white;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;opacity:0.7;"></div>
+          <div style="height:14px;background:white;border:1px solid #E0D6C8;border-radius:6px;opacity:0.6;"></div>
+        </div>
+        <div class="pb-tabbar">
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot"></div>
+          <div style="width:18px;height:10px;display:flex;align-items:center;justify-content:center;"><svg width="16" height="10" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="22" fill="#E0D6C8"/><circle cx="57" cy="31" r="17" fill="#E0D6C8"/><circle cx="78" cy="31" r="12" fill="#E0D6C8"/></svg></div>
+          <div class="pb-tab-dot"></div>
+          <div class="pb-tab-dot active"></div>
+        </div>
+      </div>
+      <div class="pf-label">Alerts</div>
+    </div>
+
+  </div>
+
+  <!-- Detail screens -->
+  <div class="section-title">Detail &amp; Flow Screens</div>
+  <div class="screens-grid" style="margin-bottom:40px;">
+
+    <!-- Post Sent -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-body" style="display:flex;flex-direction:column;">
+          <div style="background:linear-gradient(150deg,#C4694F,#D4856A);padding:14px 8px 18px;border-radius:0 0 10px 10px;text-align:center;margin-bottom:8px;">
+            <div style="font-size:16px;">🎉</div>
+            <div style="height:6px;background:rgba(255,255,255,0.8);border-radius:3px;width:50%;margin:4px auto 2px;"></div>
+            <div style="height:4px;background:rgba(255,255,255,0.5);border-radius:3px;width:70%;margin:0 auto;"></div>
+          </div>
+          <div style="padding:0 8px;flex:1;">
+            <div style="height:18px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:4px;display:flex;align-items:center;gap:4px;padding:0 6px;"><div style="width:14px;height:14px;border-radius:4px;background:#F5EDE8;flex-shrink:0;"></div></div>
+            <div style="height:4px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+            <div style="height:16px;background:#FAF6F0;border:1.5px solid #C8D8C8;border-radius:6px;margin-bottom:3px;"></div>
+            <div style="height:14px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;"></div>
+            <div style="height:14px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:8px;"></div>
+            <div style="height:14px;background:#C4694F;border-radius:99px;margin-bottom:3px;"></div>
+            <div style="height:12px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:99px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pf-label">Post Sent</div>
+    </div>
+
+    <!-- Member Profile -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="text-align:center;padding:8px 0;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#D4917F;margin:0 auto 4px;"></div>
+            <div style="height:5px;background:#231C12;border-radius:3px;width:40%;margin:0 auto 2px;opacity:0.8;"></div>
+            <div style="height:4px;background:#E0D6C8;border-radius:3px;width:50%;margin:0 auto;"></div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:6px;">
+            <div style="flex:1;height:20px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+            <div style="flex:1;height:20px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+            <div style="flex:1;height:20px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+          </div>
+          <div style="height:28px;background:white;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:4px;"></div>
+          <div style="height:18px;background:#EAF0EA;border-radius:6px;margin-bottom:4px;display:flex;align-items:center;padding:0 6px;gap:4px;"><div style="width:14px;height:14px;border-radius:50%;background:#7A9E7E;flex-shrink:0;"></div></div>
+          <div style="height:14px;background:#C4694F;border-radius:99px;margin-top:6px;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Member Profile</div>
+    </div>
+
+    <!-- Item Received -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;">
+          <svg width="40" height="26" viewBox="0 0 100 62" fill="none" style="margin-bottom:8px;">
+            <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+            <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+            <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+          </svg>
+          <div style="height:7px;background:#231C12;border-radius:3px;width:80%;margin-bottom:4px;opacity:0.8;"></div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:90%;margin-bottom:2px;opacity:0.5;"></div>
+          <div style="height:4px;background:#7A9E7E;border-radius:3px;width:60%;margin-bottom:16px;opacity:0.7;"></div>
+          <div style="height:24px;background:#EAF0EA;border:1.5px solid #C8D8C8;border-radius:8px;width:100%;margin-bottom:12px;"></div>
+          <div style="height:14px;background:#C4694F;border-radius:99px;width:100%;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Chain Continues!</div>
+    </div>
+
+    <!-- Settings -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="height:28px;background:white;border:1px solid #E0D6C8;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;gap:4px;padding:4px;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#C4694F;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:4px;background:#231C12;border-radius:2px;width:50%;margin-bottom:2px;opacity:0.7;"></div><div style="height:3px;background:#E0D6C8;border-radius:2px;width:65%;"></div></div>
+          </div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:30%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="background:white;border:1px solid #E0D6C8;border-radius:6px;overflow:hidden;margin-bottom:6px;">
+            <div style="height:10px;border-bottom:1px solid #F0E8DC;padding:0 6px;display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:50%;background:#E0D6C8;"></div><div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div></div>
+            <div style="height:10px;border-bottom:1px solid #F0E8DC;padding:0 6px;display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:50%;background:#E0D6C8;"></div><div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div></div>
+            <div style="height:10px;padding:0 6px;display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:50%;background:#E0D6C8;"></div><div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div></div>
+          </div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:35%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="background:white;border:1px solid #E0D6C8;border-radius:6px;overflow:hidden;margin-bottom:6px;">
+            <div style="height:10px;border-bottom:1px solid #F0E8DC;padding:0 6px;display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:50%;background:#E0D6C8;"></div><div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div></div>
+            <div style="height:10px;padding:0 6px;display:flex;align-items:center;gap:3px;"><div style="width:6px;height:6px;border-radius:50%;background:#E0D6C8;"></div><div style="flex:1;height:3px;background:#E0D6C8;border-radius:2px;"></div></div>
+          </div>
+          <div style="height:12px;background:transparent;border:1.5px solid #E0D6C8;border-radius:99px;"></div>
+        </div>
+      </div>
+      <div class="pf-label">Settings</div>
+    </div>
+
+    <!-- My Posts -->
+    <div>
+      <div class="phone-frame">
+        <div class="pf-notch"></div>
+        <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+        <div class="pf-body" style="padding:4px 8px;flex:1;">
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:40%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="background:white;border:1.5px solid #C8D8C8;border-radius:6px;padding:5px;margin-bottom:6px;">
+            <div style="display:flex;gap:3px;margin-bottom:4px;">
+              <div style="width:16px;height:16px;border-radius:4px;background:#F5EDE8;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="height:3px;background:#231C12;border-radius:2px;width:60%;margin-bottom:2px;opacity:0.7;"></div><div style="height:3px;background:#7A9E7E;border-radius:2px;width:75%;"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:1px;padding-top:4px;border-top:1px solid #EAF0EA;">
+              <div style="flex:1;text-align:center;"><div style="width:10px;height:10px;border-radius:50%;background:#7A9E7E;margin:0 auto;"></div></div>
+              <div style="flex:1;height:2px;background:#7A9E7E;"></div>
+              <div style="flex:1;text-align:center;"><div style="width:10px;height:10px;border-radius:50%;background:#7A9E7E;margin:0 auto;"></div></div>
+              <div style="flex:1;height:2px;background:#E0D6C8;"></div>
+              <div style="flex:1;text-align:center;"><div style="width:10px;height:10px;border-radius:50%;background:#F0D4A0;margin:0 auto;"></div></div>
+              <div style="flex:1;height:2px;background:#E0D6C8;"></div>
+              <div style="flex:1;text-align:center;"><div style="width:10px;height:10px;border-radius:50%;background:#E0D6C8;margin:0 auto;"></div></div>
+            </div>
+          </div>
+          <div style="height:4px;background:#E0D6C8;border-radius:3px;width:30%;margin-bottom:4px;opacity:0.5;"></div>
+          <div style="height:14px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;"></div>
+          <div style="height:14px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;margin-bottom:3px;"></div>
+          <div style="height:14px;background:#FAF6F0;border:1px solid #E0D6C8;border-radius:6px;"></div>
+        </div>
+      </div>
+      <div class="pf-label">My Posts</div>
+    </div>
+
+  </div>
+
+  <!-- Sharing CTA -->
+  <div style="background:linear-gradient(135deg,#231C12,#3A2E22);border-radius:20px;padding:32px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+    <div>
+      <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">Ready to explore the full prototype?</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.65);line-height:1.5;">All 23 screens are interactive. Click through the full flow — from invite code to passing your first item.</div>
+    </div>
+    <a href="next_little_v4.html" style="background:#C4694F;color:#fff;padding:14px 28px;border-radius:99px;font-size:14px;font-weight:800;text-decoration:none;flex-shrink:0;letter-spacing:-0.2px;">Open prototype →</a>
+  </div>
+
+</div>
+</div><!-- /screens -->
+
+
+<script>
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

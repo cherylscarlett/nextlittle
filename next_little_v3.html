@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Next Little — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'DanishCookies'; src: url('danish_cookies/Danish Cookies.otf') format('opentype'); }
+@font-face { font-family: 'Oliver'; src: url('oliver_3/Oliver-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'TrashHand'; src: url('TrashHand.TTF') format('truetype'); }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #EDE4D7; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px 0 40px; }
+
+.phone {
+  width: 375px;
+  min-height: 720px;
+  background: #FAF6F0;
+  border-radius: 40px;
+  border: 2px solid #D5CBBC;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(107,95,160,0.18);
+}
+
+.notch {
+  width: 100px; height: 6px;
+  background: #D5CBBC;
+  border-radius: 10px;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+.screen.active { display: flex; }
+
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 20px 4px;
+  font-size: 11px; color: #8a7aaa; font-weight: 500;
+  flex-shrink: 0;
+}
+
+.topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px 8px;
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #DDE3F0; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #4A5A8C; flex-shrink: 0;
+}
+.topbar-title { font-size: 15px; font-weight: 500; color: #231C12; }
+
+.scroll-body { padding: 0 20px 24px; flex: 1; overflow-y: auto; }
+
+.section-label {
+  font-size: 11px; font-weight: 500; color: #7A6E60;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin: 16px 0 8px;
+}
+
+.field {
+  background: #fff; border: 1px solid #D5CBBC;
+  border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: #231C12; margin-bottom: 10px;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+}
+.field.filled { background: #F5F0E8; border-color: #8A99C0; }
+.field .placeholder { color: #A49080; }
+.field .value { color: #231C12; font-weight: 500; }
+.field .arrow { color: #8A99C0; font-size: 12px; }
+
+.row-fields { display: flex; gap: 10px; margin-bottom: 10px; }
+.row-fields .field { flex: 1; margin-bottom: 0; }
+
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip {
+  padding: 8px 14px; border-radius: 20px;
+  font-size: 13px; border: 1px solid #D5CBBC;
+  background: #fff; color: #4A5A8C; cursor: pointer;
+  transition: all 0.15s;
+}
+.chip.selected { background: #4A5A8C; color: #fff; border-color: #4A5A8C; }
+
+.cta-btn {
+  width: 100%; padding: 15px;
+  background: #4A5A8C; color: #fff;
+  border: none; border-radius: 999px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  margin-top: 8px; letter-spacing: -0.1px;
+  font-family: 'Nunito', sans-serif;
+}
+.cta-btn:active { opacity: 0.9; transform: scale(0.99); }
+.cta-btn.secondary {
+  background: transparent; color: #4A5A8C;
+  border: 1.5px solid #8A99C0;
+}
+
+.progress-dots {
+  display: flex; gap: 6px; justify-content: center;
+  padding: 12px 0 4px;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #D5CBBC; }
+.dot.active { background: #4A5A8C; width: 18px; border-radius: 3px; }
+
+.info-card {
+  background: #EAF0EA; border: 1px solid #C8D0E4;
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+}
+.info-card .title { font-size: 14px; font-weight: 500; color: #231C12; margin-bottom: 2px; }
+.info-card .desc { font-size: 12px; color: #7a68a8; line-height: 1.5; }
+
+.checklist-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px;
+  background: #fff; border-bottom: 1px solid #EAF0EA;
+  cursor: pointer;
+}
+.checklist-item:last-child { border-bottom: none; }
+.check-box {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid #C8D4C8; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s;
+}
+.check-box.checked { background: #4A5A8C; border-color: #4A5A8C; color: #fff; font-size: 11px; }
+.check-label { font-size: 13px; color: #3a2a5a; }
+.checklist-wrap { border: 1px solid #D5CBBC; border-radius: 14px; overflow: hidden; margin-bottom: 12px; }
+
+.chain-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+.chain-dot { width: 10px; height: 10px; border-radius: 50%; background: #C8D4C8; flex-shrink: 0; }
+.chain-dot.you { background: #4A5A8C; }
+.chain-line { width: 2px; height: 16px; background: #E0D6C8; margin: 0 4px; flex-shrink: 0; border-radius: 1px; }
+.chain-card {
+  flex: 1; border-radius: 12px; padding: 10px 12px;
+  background: #fff; border: 1px solid #E0D6C8;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chain-card.you { background: #EAF0EA; border-color: #8A99C0; }
+.chain-name { font-size: 13px; font-weight: 500; color: #231C12; }
+.chain-meta { font-size: 11px; color: #7A6E60; margin-top: 1px; }
+.chain-size { font-size: 12px; color: #7A6E60; font-weight: 500; }
+.chain-tag { font-size: 10px; color: #4A5A8C; background: #DDE3F0; padding: 2px 7px; border-radius: 8px; margin-top: 3px; display: inline-block; }
+.chain-status { font-size: 11px; color: #7A6E60; text-align: right; min-width: 72px; }
+.chain-status.you { color: #4A5A8C; font-weight: 500; }
+
+.nudge {
+  background: #fffbec; border: 1px solid #f0e0a0;
+  border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; color: #9a7020; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.match-card { background: #EAF0EA; border: 1px solid #8A99C0; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.match-label { font-size: 11px; color: #4A5A8C; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.match-name { font-size: 15px; font-weight: 500; color: #231C12; }
+.match-meta { font-size: 12px; color: #7A6E60; margin-top: 2px; }
+.match-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.match-tag { font-size: 11px; padding: 3px 9px; border-radius: 8px; background: #fff; color: #4A5A8C; border: 1px solid #C8D0E4; }
+
+.msg-row { display: flex; margin-bottom: 8px; }
+.msg-row.mine { justify-content: flex-end; }
+.bubble { max-width: 220px; padding: 10px 13px; border-radius: 18px; font-size: 13px; line-height: 1.4; }
+.bubble.theirs { background: #fff; border: 1px solid #E0D6C8; color: #231C12; border-bottom-left-radius: 4px; }
+.bubble.mine { background: #4A5A8C; color: #fff; border-bottom-right-radius: 4px; }
+.msg-meta { font-size: 10px; color: #A49080; margin-top: 3px; text-align: right; }
+
+.stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat-box { flex: 1; background: #fff; border: 1px solid #E0D6C8; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.stat-num { font-size: 20px; font-weight: 500; color: #231C12; }
+.stat-lbl { font-size: 10px; color: #7A6E60; margin-top: 2px; }
+
+.history-item { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.history-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.history-title { font-size: 13px; font-weight: 500; color: #231C12; }
+.history-sub { font-size: 12px; color: #7A6E60; margin-top: 2px; }
+.history-note { font-size: 12px; color: #4A5A8C; margin-top: 6px; font-style: italic; }
+.stars { color: #e0a030; font-size: 12px; }
+
+.score-card { background: #4A5A8C; border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; color: #fff; }
+.score-card .sc-lbl { font-size: 12px; opacity: 0.8; margin-bottom: 4px; }
+.score-card .sc-num { font-size: 32px; font-weight: 500; }
+.score-card .sc-sub { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+
+.tab-bar { display: flex; background: #fff; border-top: 1px solid #E0D6C8; padding: 8px 0 10px; flex-shrink: 0; }
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; border: none; background: none; }
+.tab-icon { font-size: 18px; }
+.tab-lbl { font-size: 10px; color: #A49080; }
+.tab.active .tab-lbl { color: #4A5A8C; font-weight: 500; }
+
+.verify-step { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #EAF0EA; }
+.verify-step:last-child { border-bottom: none; }
+.vstep-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.vstep-icon.done { background: #e8f5e8; }
+.vstep-icon.pending { background: #fff9ec; }
+.vstep-text { font-size: 13px; color: #231C12; }
+.vstep-badge { font-size: 11px; padding: 2px 8px; border-radius: 8px; margin-left: auto; flex-shrink: 0; }
+.vstep-badge.done { background: #e8f5e8; color: #3a7a3a; }
+.vstep-badge.pending { background: #fff4d0; color: #8a6010; }
+
+.photo-upload { border: 1.5px dashed #C8D4C8; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 10px; cursor: pointer; background: #FAF6F0; }
+.photo-upload .pu-icon { font-size: 28px; margin-bottom: 6px; }
+.photo-upload .pu-text { font-size: 13px; color: #7A6E60; }
+
+.group-card { background: #fff; border: 1px solid #E0D6C8; border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+.group-card:active { background: #F5F0E8; }
+.group-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.group-name { font-size: 15px; font-weight: 500; color: #231C12; }
+.group-badge { font-size: 11px; background: #e8f5e8; color: #3a7a3a; padding: 2px 8px; border-radius: 8px; }
+.group-meta { font-size: 12px; color: #7A6E60; }
+.group-avatars { display: flex; margin-top: 8px; }
+.avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; margin-left: -6px; }
+.avatar:first-child { margin-left: 0; }
+
+.divider-label { font-size: 11px; color: #A49080; text-align: center; margin: 14px 0 10px; display: flex; align-items: center; gap: 8px; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: #E0D6C8; }
+
+.home-header { background: #4A5A8C; padding: 20px 20px 28px; flex-shrink: 0; }
+.home-greeting { font-size: 13px; color: #8A99C0; margin-bottom: 2px; }
+.home-name { font-size: 22px; font-weight: 500; color: #fff; }
+.home-sub { font-size: 13px; color: #8A99C0; margin-top: 4px; }
+
+.home-card { background: #fff; border-radius: 20px; margin: -16px 16px 0; padding: 16px; border: 1px solid #E0D6C8; flex-shrink: 0; }
+.home-card-row { display: flex; gap: 10px; }
+.home-mini { flex: 1; background: #f8f6ff; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.home-mini-num { font-size: 18px; font-weight: 500; color: #231C12; }
+.home-mini-lbl { font-size: 10px; color: #7A6E60; margin-top: 1px; }
+
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.action-btn { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: center; }
+.action-btn:active { background: #F5F0E8; }
+.action-btn .ab-icon { font-size: 22px; margin-bottom: 6px; }
+.action-btn .ab-label { font-size: 12px; color: #231C12; font-weight: 500; }
+
+.notification { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #4A5A8C; margin-top: 4px; flex-shrink: 0; }
+.notif-text { font-size: 13px; color: #231C12; line-height: 1.4; }
+.notif-time { font-size: 11px; color: #A49080; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+  <div class="notch"></div>
+
+  <!-- SCREEN: Splash -->
+  <div class="screen active" id="s-splash" style="justify-content: center; align-items: center; padding: 40px 28px; background: #FAF6F0;">
+    <div style="text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+      <!-- Logo mark: Bloom — triangular cluster, community/family concept -->
+      <svg width="84" height="74" viewBox="0 0 80 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; display: block;">
+        <circle cx="40" cy="24" r="22" fill="#7A9E7E" fill-opacity="0.82"/>
+        <circle cx="22" cy="52" r="16" fill="#C4694F" fill-opacity="0.78"/>
+        <circle cx="58" cy="52" r="13" fill="#4A5A8C" fill-opacity="0.86"/>
+        <circle cx="33" cy="15" r="7" fill="#fff" fill-opacity="0.18"/>
+      </svg>
+
+      <!-- Logotype — Oliver (local font) -->
+      <div style="font-family: 'Oliver', 'DanishCookies', Georgia, serif; font-size: 34px; color: #231C12; letter-spacing: -0.5px; line-height: 1;">Next Little</div>
+
+      <!-- Tagline -->
+      <div style="font-size: 14px; color: #7A6E60; margin-top: 10px; line-height: 1.6; font-weight: 500;">Pass it on.<br>Help the next little one.</div>
+
+      <!-- CTAs -->
+      <div style="margin-top: 44px; width: 100%;">
+        <button class="cta-btn" onclick="go('s-ob1')">Get started</button>
+        <button class="cta-btn secondary" style="margin-top: 10px;" onclick="go('s-home')">I already have an account</button>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #BFB4A4; padding-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase;">A safe, verified parent community</div>
+  </div>
+
+  <!-- SCREEN: Onboarding 1 -->
+  <div class="screen" id="s-ob1">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-splash')">←</button>
+      <span class="topbar-title">Create your profile</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size: 18px; font-weight: 500; color: #231C12; margin: 12px 0 4px;">Your little one</div>
+      <div style="font-size: 13px; color: #7A6E60; margin-bottom: 16px;">Tell us about your baby to get started</div>
+      <div class="section-label">Baby's name</div>
+      <div class="field filled"><span class="value">Mateo</span><span class="arrow">›</span></div>
+      <div class="section-label">Birth month & year</div>
+      <div class="row-fields">
+        <div class="field filled"><span class="value">September</span></div>
+        <div class="field filled"><span class="value">2025</span></div>
+      </div>
+      <div class="section-label">Current size worn</div>
+      <div class="row-fields">
+        <div class="field filled"><span class="value">12M</span><span class="arrow">›</span></div>
+        <div class="field" style="flex:1; background:#fffbec; border-color:#f0e0a0;">
+          <span style="font-size:11px; color:#9a7020;">Ahead of age ✦</span>
+        </div>
+      </div>
+      <div style="font-size: 11px; color: #A49080; margin-top: -4px; margin-bottom: 12px;">We'll slot Mateo in the chain by size, not just age</div>
+      <button class="cta-btn" onclick="go('s-ob2')">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 2 -->
+  <div class="screen" id="s-ob2">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-ob1')">←</button>
+      <span class="topbar-title">Your preferences</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size: 18px; font-weight: 500; color: #231C12; margin: 12px 0 4px;">What works for you?</div>
+      <div style="font-size: 13px; color: #7A6E60; margin-bottom: 16px;">This helps us find the right matches</div>
+      <div class="section-label">Item style preference</div>
+      <div class="chip-wrap">
+        <div class="chip" onclick="toggleChip(this)">Girls' styles</div>
+        <div class="chip" onclick="toggleChip(this)">Boys' styles</div>
+        <div class="chip selected" onclick="toggleChip(this)">Gender neutral</div>
+        <div class="chip" onclick="toggleChip(this)">All styles</div>
+      </div>
+      <div class="section-label">What are you interested in?</div>
+      <div class="chip-wrap">
+        <div class="chip selected" onclick="toggleChip(this)">👗 Clothing</div>
+        <div class="chip selected" onclick="toggleChip(this)">🪑 Gear</div>
+        <div class="chip" onclick="toggleChip(this)">🧸 Toys</div>
+        <div class="chip selected" onclick="toggleChip(this)">📚 Books</div>
+        <div class="chip" onclick="toggleChip(this)">🍼 Feeding</div>
+        <div class="chip" onclick="toggleChip(this)">😴 Sleep</div>
+        <div class="chip" onclick="toggleChip(this)">🛁 Bath</div>
+      </div>
+      <div class="section-label">How would you like to pass items on?</div>
+      <div class="chip-wrap">
+        <div class="chip selected" onclick="toggleChip(this)">📍 Local pickup</div>
+        <div class="chip selected" onclick="toggleChip(this)">📬 Ship / mail</div>
+      </div>
+      <button class="cta-btn" onclick="go('s-ob3')" style="margin-top: 8px;">Continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 3 — Verify -->
+  <div class="screen" id="s-ob3">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-ob2')">←</button>
+      <span class="topbar-title">Verify your identity</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size: 18px; font-weight: 500; color: #231C12; margin: 12px 0 4px;">A safe little community</div>
+      <div style="font-size: 13px; color: #7A6E60; margin-bottom: 16px;">Every Next Little parent is verified before joining</div>
+      <div style="background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; overflow: hidden; margin-bottom: 14px;">
+        <div class="verify-step"><div class="vstep-icon done">✅</div><div class="vstep-text">Email verified</div><div class="vstep-badge done">Done</div></div>
+        <div class="verify-step"><div class="vstep-icon done">✅</div><div class="vstep-text">Phone verified</div><div class="vstep-badge done">Done</div></div>
+        <div class="verify-step" style="border-bottom:none;"><div class="vstep-icon pending">🪪</div><div class="vstep-text">Photo ID check</div><div class="vstep-badge pending">Required</div></div>
+      </div>
+      <div class="photo-upload"><div class="pu-icon">📷</div><div class="pu-text">Upload a photo of your ID</div><div style="font-size:11px;color:#BFB4A4;margin-top:3px;">Passport, driver's licence, or state ID</div></div>
+      <div class="photo-upload"><div class="pu-icon">🤳</div><div class="pu-text">Take a quick selfie</div></div>
+      <div class="info-card" style="background:#EAF0EA;border-color:#C8D0E4;">
+        <div class="title">🔒 Your privacy is protected</div>
+        <div class="desc">ID photos are deleted immediately after verification. They're never stored, shared, or used for any other purpose.</div>
+      </div>
+      <button class="cta-btn" onclick="go('s-ob4')">Verify & continue →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 4 — Welcome -->
+  <div class="screen" id="s-ob4">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;">
+      <div style="width:80px;height:80px;border-radius:50%;background:#EAF0EA;display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:20px;">🎉</div>
+      <div style="font-size:22px;font-weight:500;color:#231C12;margin-bottom:8px;">Welcome, Cheryl!</div>
+      <div style="font-size:13px;color:#7A6E60;line-height:1.6;margin-bottom:8px;">Mateo is all set. We've slotted him into the size chain based on his 12M size.</div>
+      <div style="background:#fffbec;border:1px solid #f0e0a0;border-radius:12px;padding:10px 14px;font-size:12px;color:#9a7020;margin-bottom:28px;">📏 Mateo is wearing ahead of his age — we've got him in the right spot!</div>
+      <button class="cta-btn" onclick="go('s-home')" style="width:100%;">Enter Next Little →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Home -->
+  <div class="screen" id="s-home">
+    <div class="status-bar" style="background:#4A5A8C;color:#8A99C0;"><span>9:41</span><span>●●●</span></div>
+    <div class="home-header">
+      <div class="home-greeting">Good morning,</div>
+      <div class="home-name">Cheryl 👋</div>
+      <div class="home-sub">Mateo · 6mo · wearing 12M</div>
+    </div>
+    <div class="home-card">
+      <div style="font-size:12px;color:#7A6E60;margin-bottom:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;">Your impact</div>
+      <div class="home-card-row">
+        <div class="home-mini"><div class="home-mini-num">12</div><div class="home-mini-lbl">passed on</div></div>
+        <div class="home-mini"><div class="home-mini-num">8</div><div class="home-mini-lbl">received</div></div>
+        <div class="home-mini"><div class="home-mini-num">$340</div><div class="home-mini-lbl">saved</div></div>
+      </div>
+    </div>
+    <div class="scroll-body" style="margin-top:14px;">
+      <div class="action-grid">
+        <div class="action-btn" onclick="go('s-post')"><div class="ab-icon">📦</div><div class="ab-label">Post an item</div></div>
+        <div class="action-btn" onclick="go('s-chain')"><div class="ab-icon">🔗</div><div class="ab-label">Size chain</div></div>
+        <div class="action-btn" onclick="go('s-groups')"><div class="ab-icon">🏘️</div><div class="ab-label">My groups</div></div>
+        <div class="action-btn" onclick="go('s-history')"><div class="ab-icon">💚</div><div class="ab-label">My story</div></div>
+      </div>
+      <div class="section-label" style="margin-top:16px;">Recent activity</div>
+      <div class="notification"><div class="notif-dot"></div><div><div class="notif-text">Nia's mom accepted your 3x onesies (12M). Tap to coordinate pickup.</div><div class="notif-time">2 hours ago</div></div></div>
+      <div class="notification"><div class="notif-dot" style="background:#e0a030;"></div><div><div class="notif-text">📏 Is Mateo still in 12M? Tap to confirm or update his size.</div><div class="notif-time">Today</div></div></div>
+      <div class="notification" style="opacity:0.6;"><div class="notif-dot" style="background:#BFB4A4;"></div><div><div class="notif-text">Lucas M. posted 5 items in your size range — check them out!</div><div class="notif-time">Yesterday</div></div></div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab active" onclick="go('s-home')"><div class="tab-icon">🏠</div><div class="tab-lbl">Home</div></button>
+      <button class="tab" onclick="go('s-chain')"><div class="tab-icon">🔗</div><div class="tab-lbl">Chain</div></button>
+      <button class="tab" onclick="go('s-groups')"><div class="tab-icon">🏘️</div><div class="tab-lbl">Groups</div></button>
+      <button class="tab" onclick="go('s-post')"><div class="tab-icon">📦</div><div class="tab-lbl">Post</div></button>
+      <button class="tab" onclick="go('s-history')"><div class="tab-icon">💚</div><div class="tab-lbl">Story</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Groups -->
+  <div class="screen" id="s-groups">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar"><button class="back-btn" onclick="go('s-home')">←</button><span class="topbar-title">My groups</span></div>
+    <div class="scroll-body">
+      <div class="section-label">Your circles</div>
+      <div class="group-card" onclick="go('s-chain')">
+        <div class="group-top

@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Next Little — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'DanishCookies'; src: url('danish_cookies/Danish Cookies.otf') format('opentype'); }
+@font-face { font-family: 'Oliver'; src: url('oliver_3/Oliver-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'TrashHand'; src: url('TrashHand.TTF') format('truetype'); }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@keyframes fadeSlideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+body { background: #EDE4D7; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px 0 40px; }
+
+.phone {
+  width: 375px;
+  min-height: 720px;
+  background: #FAF6F0;
+  border-radius: 40px;
+  border: 2px solid #D5CBBC;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(107,95,160,0.18);
+}
+
+.notch {
+  width: 100px; height: 6px;
+  background: #D5CBBC;
+  border-radius: 10px;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+.screen.active { display: flex; }
+
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 20px 4px;
+  font-size: 11px; color: #A49080; font-weight: 600;
+  flex-shrink: 0;
+}
+
+.topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px 8px;
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #FAE8E3; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #C4694F; flex-shrink: 0;
+}
+.topbar-title { font-size: 15px; font-weight: 500; color: #231C12; }
+
+.scroll-body { padding: 0 20px 24px; flex: 1; overflow-y: auto; }
+
+.section-label {
+  font-size: 11px; font-weight: 500; color: #7A6E60;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin: 16px 0 8px;
+}
+
+.field {
+  background: #fff; border: 1px solid #D5CBBC;
+  border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: #231C12; margin-bottom: 10px;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+}
+.field.filled { background: #F5F0E8; border-color: #CEC4B4; }
+.field .placeholder { color: #A49080; }
+.field .value { color: #231C12; font-weight: 500; }
+.field .arrow { color: #D4917F; font-size: 12px; }
+
+.row-fields { display: flex; gap: 10px; margin-bottom: 10px; }
+.row-fields .field { flex: 1; margin-bottom: 0; }
+
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip {
+  padding: 8px 14px; border-radius: 20px;
+  font-size: 13px; border: 1px solid #D5CBBC;
+  background: #fff; color: #7A6E60; cursor: pointer;
+  transition: all 0.15s; font-weight: 500;
+}
+.chip:hover { border-color: #7A9E7E; color: #7A9E7E; }
+.chip.selected { background: #7A9E7E; color: #fff; border-color: #7A9E7E; }
+
+.cta-btn {
+  width: 100%; padding: 15px;
+  background: #C4694F; color: #fff;
+  border: none; border-radius: 999px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  margin-top: 8px; letter-spacing: -0.1px;
+  font-family: 'Nunito', sans-serif;
+}
+.cta-btn:active { opacity: 0.9; transform: scale(0.99); }
+.cta-btn.secondary {
+  background: transparent; color: #C4694F;
+  border: 1.5px solid #D4917F;
+}
+
+.progress-dots {
+  display: flex; gap: 6px; justify-content: center;
+  padding: 12px 0 4px;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #D5CBBC; }
+.dot.active { background: #C4694F; width: 18px; border-radius: 3px; }
+
+.info-card {
+  background: #EAF0EA; border: 1px solid #EAC4B8;
+  border-radius: 14px; padding: 14px 16px; margin-bottom: 12px;
+}
+.info-card .title { font-size: 14px; font-weight: 500; color: #231C12; margin-bottom: 2px; }
+.info-card .desc { font-size: 12px; color: #7A6E60; line-height: 1.5; }
+
+.checklist-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px;
+  background: #fff; border-bottom: 1px solid #EAF0EA;
+  cursor: pointer;
+}
+.checklist-item:last-child { border-bottom: none; }
+.check-box {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid #C8D4C8; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s;
+}
+.check-box.checked { background: #7A9E7E; border-color: #7A9E7E; color: #fff; font-size: 11px; }
+.check-label { font-size: 13px; color: #231C12; font-weight: 500; }
+.checklist-wrap { border: 1px solid #D5CBBC; border-radius: 14px; overflow: hidden; margin-bottom: 12px; }
+
+.chain-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+.chain-dot { width: 10px; height: 10px; border-radius: 50%; background: #C8D4C8; flex-shrink: 0; }
+.chain-dot.you { background: #C4694F; }
+.chain-line { width: 2px; height: 16px; background: #E0D6C8; margin: 0 4px; flex-shrink: 0; border-radius: 1px; }
+.chain-card {
+  flex: 1; border-radius: 12px; padding: 10px 12px;
+  background: #fff; border: 1px solid #E0D6C8;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chain-card.you { background: #EAF0EA; border-color: #D4917F; }
+.chain-name { font-size: 13px; font-weight: 500; color: #231C12; }
+.chain-meta { font-size: 11px; color: #7A6E60; margin-top: 1px; }
+.chain-size { font-size: 12px; color: #7A6E60; font-weight: 500; }
+.chain-tag { font-size: 10px; color: #C4694F; background: #FAE8E3; padding: 2px 7px; border-radius: 8px; margin-top: 3px; display: inline-block; }
+.chain-status { font-size: 11px; color: #7A6E60; text-align: right; min-width: 72px; }
+.chain-status.you { color: #C4694F; font-weight: 500; }
+
+.nudge {
+  background: #fffbec; border: 1px solid #f0e0a0;
+  border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; color: #9a7020; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.match-card { background: #EAF0EA; border: 1px solid #D4917F; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.match-label { font-size: 11px; color: #C4694F; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.match-name { font-size: 15px; font-weight: 500; color: #231C12; }
+.match-meta { font-size: 12px; color: #7A6E60; margin-top: 2px; }
+.match-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.match-tag { font-size: 11px; padding: 3px 9px; border-radius: 8px; background: #fff; color: #C4694F; border: 1px solid #EAC4B8; }
+
+.msg-row { display: flex; margin-bottom: 8px; }
+.msg-row.mine { justify-content: flex-end; }
+.bubble { max-width: 220px; padding: 10px 13px; border-radius: 18px; font-size: 13px; line-height: 1.4; }
+.bubble.theirs { background: #fff; border: 1px solid #E0D6C8; color: #231C12; border-bottom-left-radius: 4px; }
+.bubble.mine { background: #C4694F; color: #fff; border-bottom-right-radius: 4px; }
+.msg-meta { font-size: 10px; color: #A49080; margin-top: 3px; text-align: right; }
+
+.stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat-box { flex: 1; background: #fff; border: 1px solid #E0D6C8; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.stat-num { font-size: 20px; font-weight: 500; color: #231C12; }
+.stat-lbl { font-size: 10px; color: #7A6E60; margin-top: 2px; }
+
+.history-item { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.history-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.history-title { font-size: 13px; font-weight: 500; color: #231C12; }
+.history-sub { font-size: 12px; color: #7A6E60; margin-top: 2px; }
+.history-note { font-size: 12px; color: #C4694F; margin-top: 6px; font-style: italic; }
+.stars { color: #e0a030; font-size: 12px; }
+
+.score-card { background: #C4694F; border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; color: #fff; }
+.score-card .sc-lbl { font-size: 12px; opacity: 0.8; margin-bottom: 4px; }
+.score-card .sc-num { font-size: 32px; font-weight: 500; }
+.score-card .sc-sub { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+
+.tab-bar { display: flex; background: #fff; border-top: 1px solid #E0D6C8; padding: 8px 0 10px; flex-shrink: 0; }
+.tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; border: none; background: none; color: #A49080; }
+.tab-icon { display: flex; align-items: center; justify-content: center; height: 22px; }
+.tab-icon svg { stroke: currentColor; transition: stroke 0.15s; }
+.tab-lbl { font-size: 10px; color: inherit; letter-spacing: 0.01em; }
+.tab.active { color: #C4694F; }
+.tab.active .tab-lbl { font-weight: 600; }
+.tab-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.tab-badge { position: absolute; top: -3px; right: -6px; min-width: 16px; height: 16px; background: #C4694F; color: #fff; font-size: 9px; font-weight: 800; border-radius: 99px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid #fff; line-height: 1; }
+
+.verify-step { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #EAF0EA; }
+.verify-step:last-child { border-bottom: none; }
+.vstep-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.vstep-icon.done { background: #e8f5e8; }
+.vstep-icon.pending { background: #fff9ec; }
+.vstep-text { font-size: 13px; color: #231C12; }
+.vstep-badge { font-size: 11px; padding: 2px 8px; border-radius: 8px; margin-left: auto; flex-shrink: 0; }
+.vstep-badge.done { background: #e8f5e8; color: #3a7a3a; }
+.vstep-badge.pending { background: #fff4d0; color: #8a6010; }
+
+.photo-upload { border: 1.5px dashed #C8D4C8; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 10px; cursor: pointer; background: #FAF6F0; }
+.photo-upload .pu-icon { font-size: 28px; margin-bottom: 6px; }
+.photo-upload .pu-text { font-size: 13px; color: #7A6E60; }
+
+.group-card { background: #fff; border: 1px solid #E0D6C8; border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; }
+.group-card:active { background: #F5F0E8; }
+.group-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.group-name { font-size: 15px; font-weight: 500; color: #231C12; }
+.group-badge { font-size: 11px; background: #e8f5e8; color: #3a7a3a; padding: 2px 8px; border-radius: 8px; }
+.group-meta { font-size: 12px; color: #7A6E60; }
+.group-avatars { display: flex; margin-top: 8px; }
+.avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; margin-left: -6px; }
+.avatar:first-child { margin-left: 0; }
+
+.divider-label { font-size: 11px; color: #A49080; text-align: center; margin: 14px 0 10px; display: flex; align-items: center; gap: 8px; }
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: #E0D6C8; }
+
+.home-header { background: #C4694F; padding: 16px 20px 28px; flex-shrink: 0; }
+.home-name { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+.home-sub { font-size: 14px; color: rgba(255,255,255,0.80); margin-top: 5px; font-weight: 500; }
+
+.home-card { background: #fff; border-radius: 20px; margin: -16px 16px 0; padding: 16px; border: 1px solid #E0D6C8; flex-shrink: 0; }
+.home-card-row { display: flex; gap: 10px; }
+.home-mini { flex: 1; background: #F5F0E8; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.home-mini-num { font-size: 18px; font-weight: 700; color: #231C12; }
+.home-mini-lbl { font-size: 10px; color: #7A6E60; margin-top: 1px; }
+
+/* Chain preview in home card */
+.chain-preview-node { flex: 1; text-align: center; }
+.chain-preview-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; margin: 0 auto 5px;
+  color: #fff;
+}
+.chain-preview-name { font-size: 11px; font-weight: 700; color: #231C12; }
+.chain-preview-size { font-size: 11px; color: #7A6E60; margin-top: 1px; }
+.chain-preview-role { font-size: 10px; color: #A49080; margin-top: 4px; line-height: 1.3; }
+
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.action-btn { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: center; }
+.action-btn:active { background: #F5F0E8; }
+.action-btn .ab-icon { font-size: 22px; margin-bottom: 6px; }
+.action-btn .ab-label { font-size: 12px; color: #231C12; font-weight: 500; }
+
+.notification { background: #fff; border: 1px solid #E0D6C8; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; transition: background 0.15s; }
+.notification:active { background: #FAF6F0; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #C4694F; margin-top: 4px; flex-shrink: 0; }
+.notif-text { font-size: 13px; color: #231C12; line-height: 1.4; }
+.notif-time { font-size: 11px; color: #A49080; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+  <div class="notch"></div>
+
+  <!-- SCREEN: Splash -->
+  <div class="screen active" id="s-splash" style="justify-content: center; align-items: center; padding: 40px 28px; background: #FAF6F0;">
+    <div style="text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+      <!-- Logo mark: Linear Chain A — no highlight dot -->
+      <svg width="100" height="62" viewBox="0 0 100 62" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; display: block;">
+        <circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.82"/>
+        <circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.78"/>
+        <circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+      </svg>
+
+      <!-- Logotype — Danish Cookies -->
+      <div style="font-family: 'DanishCookies', Georgia, serif; font-size: 36px; color: #231C12; line-height: 1.1;">Next Little</div>
+
+      <!-- Tagline -->
+      <div style="font-size: 14px; color: #7A6E60; margin-top: 10px; line-height: 1.6; font-weight: 500;">Pass it on.<br>Help the next little one.</div>
+
+      <!-- CTAs -->
+      <div style="margin-top: 44px; width: 100%;">
+        <button class="cta-btn" onclick="go('s-invite')">Get started</button>
+        <button class="cta-btn secondary" style="margin-top: 10px;" onclick="go('s-home')">I already have an account</button>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #BFB4A4; padding-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase;">A safe, verified parent community</div>
+  </div>
+
+  <!-- SCREEN: Invite Gate -->
+  <div class="screen" id="s-invite">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div style="padding:10px 20px 0; flex-shrink:0;">
+      <button class="back-btn" onclick="go('s-splash')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; padding:12px 28px 32px; overflow-y:auto;">
+
+      <!-- Small logo mark -->
+      <div style="display:flex; justify-content:center; margin:20px 0 28px;">
+        <svg width="72" height="46" viewBox="0 0 96 60" fill="none">
+          <circle cx="26" cy="30" r="25" fill="#7A9E7E" fill-opacity="0.82"/>
+          <circle cx="54" cy="30" r="19" fill="#C4694F" fill-opacity="0.78"/>
+          <circle cx="74" cy="30" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <div style="font-size:24px; font-weight:800; color:#231C12; letter-spacing:-0.5px; line-height:1.2; margin-bottom:10px;">A trusted community.</div>
+      <div style="font-size:14px; color:#7A6E60; line-height:1.65; margin-bottom:28px;">Next Little is an invite-only trusted community. Every member is vouched for by someone already here.</div>
+
+      <!-- Code input -->
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#7A6E60; margin-bottom:8px;">Enter your invite code</div>
+      <input
+        id="invite-input"
+        type="text"
+        placeholder="e.g. NL·SARAH·7K2M"
+        autocomplete="off"
+        style="width:100%; padding:14px 16px; background:#FAF6F0; border:1.5px solid #D5CBBC; border-radius:12px; font-size:15px; font-family:'Nunito',sans-serif; font-weight:700; color:#231C12; letter-spacing:0.06em; outline:none; text-transform:uppercase; transition: border-color 0.2s;"
+        oninput="onInviteType()"
+      />
+      <div id="invite-error" style="display:none; font-size:12px; color:#C4694F; margin-top:6px; font-weight:600;">Invalid code — check with your inviter.</div>
+
+      <!-- Verify button -->
+      <button id="invite-verify-btn" class="cta-btn" style="margin-top:12px;" onclick="verifyCode()">Verify code</button>
+
+      <!-- Invited-by card — hidden until verified -->
+      <div id="invite-card" style="display:none; margin-top:14px; animation:fadeSlideUp 0.25s ease;">
+        <div style="background:#FAF6F0; border:1.5px solid #C8D4C8; border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:14px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:#EAF0EA; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">🌿</div>
+          <div>
+            <div style="font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#7A9E7E; margin-bottom:2px;">Invited by</div>
+            <div style="font-size:15px; font-weight:800; color:#231C12; letter-spacing:-0.2px;" id="invite-member-name">Sarah M.</div>
+            <div style="font-size:12px; color:#7A6E60; margin-top:1px;" id="invite-member-meta">Member since 2024 · Austin, TX</div>
+          </div>
+          <div style="margin-left:auto; flex-shrink:0;">
+            <span style="font-size:11px; background:#EAF0EA; color:#3A6A3A; padding:4px 10px; border-radius:99px; font-weight:700;">Verified ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Continue button — hidden until verified -->
+      <button id="invite-continue-btn" class="cta-btn" style="display:none; margin-top:10px;" onclick="go('s-ob1')">Continue to profile setup</button>
+
+      <div style="flex:1;"></div>
+
+      <!-- No code -->
+      <div style="text-align:center; margin-top:24px;">
+        <div class="divider-label" style="margin-bottom:14px;">don't have a code?</div>
+        <button class="cta-btn secondary" style="font-size:13px;">Request access</button>
+        <div style="font-size:11px; color:#A49080; margin-top:8px; line-height:1.5;">We'll reach out when a spot opens near you.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 1 -->
+  <div class="screen" id="s-ob1">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-invite')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Create your profile</span>
+      <span style="font-size:11px;color:#A49080;font-weight:600;margin-left:auto;">1 of 3</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size: 20px; font-weight: 800; color: #231C12; margin: 14px 0 4px; letter-spacing: -0.3px;">Your little one</div>
+      <div style="font-size: 13px; color: #7A6E60; margin-bottom: 20px; line-height: 1.5;">Tell us about your baby to get started.</div>
+
+      <div class="section-label">Baby's name</div>
+      <div class="field filled"><span class="value">Mateo</span><span class="arrow">›</span></div>
+
+      <div class="section-label">Birth month & year</div>
+      <div class="row-fields">
+        <div class="field filled"><span class="value">September</span></div>
+        <div class="field filled"><span class="value">2025</span></div>
+      </div>
+
+      <div class="section-label">Age</div>
+      <div class="field" style="background:#F5F0E8; border-color:#CEC4B4; margin-bottom:10px;">
+        <span class="value" id="ob1-age-text">—</span>
+        <span style="font-size:10px; color:#A49080; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;">Calculated</span>
+      </div>
+
+      <div class="section-label">Current clothing size</div>
+      <div class="field filled" style="margin-bottom:6px;">
+        <span class="value" style="font-size:15px;" id="ob1-size-text">12M</span>
+        <span id="ob1-size-badge" style="font-size:11px; background:#FEF0E0; color:#A05820; padding:4px 10px; border-radius:99px; font-weight:700; letter-spacing:0.02em; display:none;"></span>
+      </div>
+      <div style="font-size:11px; color:#A49080; margin-bottom:16px; line-height:1.5;">
+        Please adjust size if current size is different from age.
+      </div>
+
+      <!-- Chain placement context -->
+      <div style="display:flex; align-items:flex-start; gap:10px; background:#EAF0EA; border-radius:12px; padding:11px 13px; margin-bottom:20px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="7" cy="7" r="6.5" stroke="#5A8A5A" stroke-width="1.2"/><path d="M7 6.5V10" stroke="#5A8A5A" stroke-width="1.4" stroke-linecap="round"/><circle cx="7" cy="4.5" r="0.7" fill="#5A8A5A"/></svg>
+        <span style="font-size:12px; color:#3A6A3A; line-height:1.55; font-weight:500;">Mateo will be slotted by size not age, so he'll get items that actually fit!</span>
+      </div>
+
+      <button class="cta-btn" onclick="go('s-ob2')">Continue</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 2 -->
+  <div class="screen" id="s-ob2">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-ob1')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Your preferences</span>
+      <span style="font-size:11px;color:#A49080;font-weight:600;margin-left:auto;">2 of 3</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size:20px;font-weight:800;color:#231C12;margin:14px 0 4px;letter-spacing:-0.3px;">What works for you?</div>
+      <div style="font-size:13px;color:#7A6E60;margin-bottom:20px;line-height:1.5;">We'll use this to find the right matches for Mateo.</div>
+
+      <div class="section-label">Style preference</div>
+      <div class="chip-wrap">
+        <div class="chip" onclick="toggleChip(this)">Girls' styles</div>
+        <div class="chip" onclick="toggleChip(this)">Boys' styles</div>
+        <div class="chip selected" onclick="toggleChip(this)">Gender neutral</div>
+        <div class="chip" onclick="toggleChip(this)">All styles</div>
+      </div>
+
+      <div class="section-label">Item categories</div>
+      <div class="chip-wrap">
+        <div class="chip selected" onclick="toggleChip(this)">👗 Clothing</div>
+        <div class="chip selected" onclick="toggleChip(this)">🪑 Gear</div>
+        <div class="chip" onclick="toggleChip(this)">🧸 Toys</div>
+        <div class="chip selected" onclick="toggleChip(this)">📚 Books</div>
+        <div class="chip" onclick="toggleChip(this)">🍼 Feeding</div>
+        <div class="chip" onclick="toggleChip(this)">😴 Sleep</div>
+        <div class="chip" onclick="toggleChip(this)">🛁 Bath</div>
+      </div>
+
+      <div class="section-label">How you'll pass items on</div>
+      <div class="chip-wrap">
+        <div class="chip selected" onclick="toggleChip(this)">📍 Local pickup</div>
+        <div class="chip selected" onclick="toggleChip(this)">📬 Ship / mail</div>
+      </div>
+
+      <div style="height:1px;background:#E0D6C8;margin:16px 0;"></div>
+
+      <div style="font-size:11px;color:#A49080;line-height:1.6;margin-bottom:16px;">
+        You can always change this later on in your profile settings.
+      </div>
+
+      <button class="cta-btn" onclick="go('s-ob4')">Continue</button>
+    </div>
+  </div>
+
+  <!--
+  ══════════════════════════════════════════════════════════════
+  ARCHIVED — ID VERIFICATION FLOW (OB3)
+  Shelved in favour of invite-only model (v1 launch).
+  Reintroduce when scaling beyond founding community.
+  ══════════════════════════════════════════════════════════════
+
+  <div class="screen" id="s-ob3-verify-archived">
+    ...photo ID upload, selfie, privacy card...
+  </div>
+  -->
+
+  <!-- SCREEN: Onboarding 3 — Invite -->
+  <div class="screen" id="s-ob3">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-ob2')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Your invite</span>
+      <span style="font-size:11px;color:#A49080;font-weight:600;margin-left:auto;">3 of 4</span>
+    </div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+    </div>
+    <div class="scroll-body">
+      <div style="font-size:20px;font-weight:800;color:#231C12;margin:14px 0 4px;letter-spacing:-0.3px;">Almost there.</div>
+      <div style="font-size:13px;color:#7A6E60;margin-bottom:20px;line-height:1.55;">Next Little is invite-only. Every member is vouched for by someone already here.</div>
+
+      <!-- Invited by card -->
+      <div style="background:#FAF6F0;border:1.5px solid #C8D4C8;border-radius:16px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+        <div style="width:42px;height:42px;border-radius:50%;background:#EAF0EA;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🌿</div>
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7A9E7E;margin-bottom:2px;">Invited by</div>
+          <div style="font-size:15px;font-weight:800;color:#231C12;letter-spacing:-0.2px;">Sarah M.</div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:1px;">Member since 2024 · Austin, TX</div>
+        </div>
+        <div style="margin-left:auto;">
+          <span style="font-size:11px;background:#EAF0EA;color:#3A6A3A;padding:4px 10px;border-radius:99px;font-weight:700;">Verified ✓</span>
+        </div>
+      </div>
+
+      <!-- Invite code -->
+      <div class="section-label">Invite code</div>
+      <div style="position:relative;margin-bottom:6px;">
+        <input
+          type="text"
+          value="NL·SARAH·7K2M"
+          style="width:100%;padding:13px 44px 13px 14px;background:#F5F0E8;border:1.5px solid #7A9E7E;border-radius:12px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:700;color:#231C12;letter-spacing:0.06em;outline:none;"
+          readonly
+        />
+        <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:13px;">✓</span>
+      </div>
+      <div style="font-size:11px;color:#A49080;margin-bottom:20px;line-height:1.5;">Codes are single-use and tied to your inviter.</div>
+
+      <button class="cta-btn" onclick="go('s-ob4')">Join Next Little</button>
+
+      <div class="divider-label" style="margin:18px 0 14px;">don't have a code?</div>
+
+      <button class="cta-btn secondary" style="font-size:13px;">Request access</button>
+      <div style="font-size:11px;color:#A49080;text-align:center;margin-top:8px;line-height:1.5;">We'll reach out when a spot opens near you.</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Onboarding 4 — Welcome -->
+  <div class="screen" id="s-ob4">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="progress-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;">
+
+      <!-- Logo mark — small, celebratory -->
+      <svg width="64" height="42" viewBox="0 0 96 60" fill="none" style="margin-bottom:20px;">
+        <circle cx="26" cy="30" r="25" fill="#7A9E7E" fill-opacity="0.82"/>
+        <circle cx="54" cy="30" r="19" fill="#C4694F" fill-opacity="0.78"/>
+        <circle cx="74" cy="30" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+      </svg>
+
+      <div style="font-size:24px;font-weight:800;color:#231C12;letter-spacing:-0.4px;margin-bottom:8px;">Welcome, Cheryl!</div>
+      <div style="font-size:14px;color:#7A6E60;line-height:1.65;margin-bottom:20px;">You're all set. Mateo is in the chain and ready to receive his first pass.</div>
+
+      <!-- Dynamic size note — only rendered if ahead or behind -->
+      <div id="ob4-size-note" style="display:none;border-radius:14px;padding:13px 16px;font-size:13px;font-weight:600;line-height:1.55;margin-bottom:24px;text-align:left;width:100%;"></div>
+
+      <button class="cta-btn" onclick="go('s-home')" style="width:100%;">Let's go!</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Home -->
+  <!-- SCREEN: Edit Profile -->
+  <div class="screen" id="s-edit-profile">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Edit profile</span>
+    </div>
+
+    <div class="scroll-body">
+
+      <!-- ── Your little one ── -->
+      <div style="font-size:17px;font-weight:800;color:#231C12;margin:8px 0 14px;letter-spacing:-0.2px;">Your little one</div>
+
+      <div class="section-label">Baby's name</div>
+      <div class="field filled" style="margin-bottom:14px;"><span class="value">Mateo</span><span class="arrow">›</span></div>
+
+      <div class="section-label">Birth month &amp; year</div>
+      <div class="row-fields" style="margin-bottom:14px;">
+        <div class="field filled"><span class="value">September</span></div>
+        <div class="field filled"><span class="value">2025</span></div>
+      </div>
+
+      <div class="section-label">Age</div>
+      <div class="field" style="background:#F5F0E8;border-color:#CEC4B4;margin-bottom:14px;">
+        <span class="value" id="ep-age-text">—</span>
+        <span style="font-size:10px;color:#A49080;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">Calculated</span>
+      </div>
+
+      <div class="section-label">Current clothing size</div>
+      <div class="field filled" style="margin-bottom:6px;">
+        <span class="value" style="font-size:15px;" id="ep-size-text">12M</span>
+        <span id="ep-size-badge" style="font-size:11px;background:#FEF0E0;color:#A05820;padding:4px 10px;border-radius:99px;font-weight:700;display:none;"></span>
+      </div>
+      <div style="font-size:11px;color:#A49080;margin-bottom:20px;line-height:1.5;">Adjust if current size differs from age default.</div>
+
+      <div style="height:1px;background:#E0D6C8;margin-bottom:20px;"></div>
+
+      <!-- ── Preferences ── -->
+      <div style="font-size:17px;font-weight:800;color:#231C12;margin-bottom:14px;letter-spacing:-0.2px;">Preferences</div>
+
+      <div class="section-label">Style preference</div>
+      <div class="chip-wrap" style="margin-bottom:14px;">
+        <div class="chip" onclick="toggleChip(this)">Girls' styles</div>
+        <div class="chip" onclick="toggleChip(this)">Boys' styles</div>
+        <div class="chip selected" onclick="toggleChip(this)">Gender neutral</div>
+        <div class="chip" onclick="toggleChip(this)">All styles</div>
+      </div>
+
+      <div class="section-label">Item categories</div>
+      <div class="chip-wrap" style="margin-bottom:14px;">
+        <div class="chip selected" onclick="toggleChip(this)">👗 Clothing</div>
+        <div class="chip selected" onclick="toggleChip(this)">🪑 Gear</div>
+        <div class="chip" onclick="toggleChip(this)">🧸 Toys</div>
+        <div class="chip selected" onclick="toggleChip(this)">📚 Books</div>
+        <div class="chip" onclick="toggleChip(this)">🌸 For the mama</div>
+      </div>
+
+      <div class="section-label">How you'll pass items on</div>
+      <div class="chip-wrap" style="margin-bottom:24px;">
+        <div class="chip selected" onclick="toggleChip(this)">📍 Local pickup</div>
+        <div class="chip selected" onclick="toggleChip(this)">📬 Ship / mail</div>
+      </div>
+
+      <button class="cta-btn" onclick="go('s-home')">Save changes</button>
+      <div style="height:16px;"></div>
+
+    </div>
+  </div>
+
+  <div class="screen" id="s-home">
+    <div class="status-bar" style="background:#C4694F;color:rgba(255,255,255,0.7);"><span>9:41</span><span>●●●</span></div>
+
+    <!-- Header -->
+    <div class="home-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div class="home-name">Hey, Cheryl! 👋</div>
+          <div class="home-sub">Mateo · 6 months · wearing 12M</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:2px;">
+          <button onclick="go('s-edit-profile')" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);border-radius:99px;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;">Edit profile</button>
+          <button onclick="go('s-settings')" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;color:#fff;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.3" stroke="#fff" stroke-width="1.4"/><path d="M8 2.5V4M8 12v1.5M2.5 8H4M12 8h1.5M3.9 3.9l1 1M11.1 11.1l1 1M3.9 12.1l1-1M11.1 4.9l1-1" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chain preview card -->
+    <div class="home-card">
+      <div style="font-size:11px;font-weight:700;color:#7A6E60;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">Your Next Little Chain</div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;">
+
+        <!-- Left cluster: pass to Mateo (2 kids from 2 groups) -->
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+          <div style="position:relative;width:70px;height:50px;margin-bottom:6px;">
+            <!-- Lena B. — sage -->
+            <div style="position:absolute;left:0;top:5px;width:42px;height:42px;border-radius:50%;background:#7A9E7E;opacity:0.85;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.09);">LB</div>
+            <!-- Emma K. — terra, overlapping -->
+            <div style="position:absolute;left:26px;top:0;width:36px;height:36px;border-radius:50%;background:#C4694F;opacity:0.78;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.09);">EK</div>
+          </div>
+          <div style="font-size:10px;color:#A49080;font-weight:600;text-align:center;line-height:1.4;">pass<br>to you</div>
+        </div>
+
+        <!-- Arrow left -->
+        <div style="flex-shrink:0;margin:0 6px 16px;">
+          <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><path d="M1 5H19M15 1.5L19.5 5L15 8.5" stroke="#D5CBBC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- Center: You / Mateo -->
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="width:56px;height:56px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;margin:0 auto 6px;border:3px solid #fff;box-shadow:0 5px 16px rgba(196,105,79,0.28);">You</div>
+          <div style="font-size:12px;font-weight:800;color:#C4694F;">Mateo</div>
+          <div style="font-size:11px;color:#C4694F;font-weight:600;">12M</div>
+        </div>
+
+        <!-- Arrow right -->
+        <div style="flex-shrink:0;margin:0 6px 16px;">
+          <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><path d="M1 5H19M15 1.5L19.5 5L15 8.5" stroke="#D5CBBC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <!-- Right cluster: Mateo passes to (2 kids from 2 groups) -->
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+          <div style="position:relative;width:70px;height:50px;margin-bottom:6px;">
+            <!-- Noah A. — indigo -->
+            <div style="position:absolute;right:0;top:5px;width:42px;height:42px;border-radius:50%;background:#4A5A8C;opacity:0.85;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.09);">NA</div>
+            <!-- Zoe M. — sage, overlapping -->
+            <div style="position:absolute;right:26px;top:0;width:36px;height:36px;border-radius:50%;background:#7A9E7E;opacity:0.78;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.09);">ZM</div>
+          </div>
+          <div style="font-size:10px;color:#A49080;font-weight:600;text-align:center;line-height:1.4;">you<br>pass to</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Action grid & recent activity -->
+    <div class="scroll-body" style="margin-top:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;">
+        <div class="action-btn" onclick="go('s-post')">
+          <div class="ab-icon">📦</div><div class="ab-label">Ready to pass it on</div>
+        </div>
+        <div class="action-btn" onclick="go('s-chain')">
+          <div class="ab-icon">🔗</div><div class="ab-label">Size chains</div>
+        </div>
+        <div class="action-btn" onclick="go('s-join-group')">
+          <div class="ab-icon">🌱</div><div class="ab-label">Join a group</div>
+        </div>
+      </div>
+
+      <!-- Active passes card -->
+      <div class="section-label" style="margin-top:16px;">Active pass</div>
+      <div onclick="go('s-my-posts')" style="background:#fff;border:1.5px solid #C8D8C8;border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+        <div style="width:38px;height:38px;border-radius:10px;background:#F5EDE8;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">👗</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#231C12;">Gap fleece hoodie set</div>
+          <div style="font-size:12px;color:#7A9E7E;margin-top:2px;font-weight:600;">Emma B. accepted · Pickup Saturday 10am</div>
+        </div>
+        <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 9px;border-radius:99px;font-weight:700;flex-shrink:0;">Active</span>
+      </div>
+
+      <div class="section-label" style="margin-top:4px;">For you</div>
+
+      <!-- Nudge 0: Item available (receiving parent view) -->
+      <div id="nudge-item-available" style="background:#fff;border:1.5px solid #C4694F;border-radius:14px;padding:13px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#FAE8E3;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">👗</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#231C12;margin-bottom:2px;">Something's available for Emma!</div>
+          <div style="font-size:12px;color:#7A6E60;line-height:1.5;">Cheryl is passing on a <strong>Gap fleece hoodie set · 12–18M</strong>. Does Emma need it?</div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button onclick="acceptItem()" style="flex:1;padding:7px 0;background:#C4694F;color:#fff;border:none;border-radius:99px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Accept</button>
+            <button onclick="dismissCard('nudge-item-available')" style="flex:1;padding:7px 0;background:#FAF6F0;color:#7A6E60;border:1.5px solid #E0D6C8;border-radius:99px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Don't need it</button>
+          </div>
+        </div>
+        <button onclick="dismissCard('nudge-item-available')" style="background:none;border:none;cursor:pointer;color:#BFB4A4;font-size:16px;line-height:1;flex-shrink:0;padding:0;">✕</button>
+      </div>
+
+      <!-- Nudge 1: Size confirmation — pending action -->
+      <div id="nudge-size-check" style="background:#FEF6EC;border:1.5px solid #F0D4A0;border-radius:14px;padding:13px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:11px;">
+        <div onclick="go('s-edit-profile')" style="display:flex;align-items:flex-start;gap:11px;flex:1;cursor:pointer;">
+          <div style="width:34px;height:34px;border-radius:50%;background:#F0D4A0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">📏</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:800;color:#231C12;margin-bottom:2px;">Is Mateo still in 12M?</div>
+            <div style="font-size:12px;color:#7A6E60;line-height:1.5;">Confirm his size so your chain stays accurate and matches go to the right kid.</div>
+            <div style="margin-top:8px;">
+              <span style="font-size:11px;font-weight:700;color:#A05820;background:#F0D4A0;padding:4px 10px;border-radius:99px;">Confirm size →</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="dismissCard('nudge-size-check')" style="background:none;border:none;cursor:pointer;color:#BFB4A4;font-size:16px;line-height:1;flex-shrink:0;padding:0;">✕</button>
+      </div>
+
+      <!-- Nudge 2: Milestone pass-it-on -->
+      <div id="nudge-milestone" style="background:#EAF0EA;border:1.5px solid #C8D8C8;border-radius:14px;padding:13px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:11px;">
+        <div onclick="go('s-post')" style="display:flex;align-items:flex-start;gap:11px;flex:1;cursor:pointer;">
+          <div style="width:34px;height:34px;border-radius:50%;background:#C8D8C8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">👶</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:800;color:#231C12;margin-bottom:2px;">Mateo is 6 months!</div>
+            <div style="font-size:12px;color:#3A6A3A;line-height:1.5;">Looks like he may have outgrown some 9–12M items. Ready to pass them on to the next little?</div>
+            <div style="margin-top:8px;">
+              <span style="font-size:11px;font-weight:700;color:#3A6A3A;background:#B8D4B8;padding:4px 10px;border-radius:99px;">Pass it on →</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="dismissCard('nudge-milestone')" style="background:none;border:none;cursor:pointer;color:#BFB4A4;font-size:16px;line-height:1;flex-shrink:0;padding:0;">✕</button>
+      </div>
+
+      <!-- Nudge 3: No takers — donate prompt (poster's view, shown after no one accepts) -->
+      <div id="nudge-no-takers" style="display:none;background:#FAF6F0;border:1.5px solid #D5CBBC;border-radius:14px;padding:13px 14px;margin-bottom:10px;display:none;align-items:flex-start;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#E8DFD4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">🤲</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#231C12;margin-bottom:2px;">No little one needs this right now</div>
+          <div style="font-size:12px;color:#7A6E60;line-height:1.5;">No one in your chain claimed the Gap fleece hoodie set. Consider donating it to a nearby family or charity.</div>
+          <div style="margin-top:8px;">
+            <span style="font-size:11px;font-weight:700;color:#7A6E60;background:#E8DFD4;padding:4px 10px;border-radius:99px;">Find nearby charities →</span>
+          </div>
+        </div>
+        <button onclick="dismissCard('nudge-no-takers')" style="background:none;border:none;cursor:pointer;color:#BFB4A4;font-size:16px;line-height:1;flex-shrink:0;padding:0;">✕</button>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab active"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 9.5L10 3.5L17 9.5V17H13V12.5H7V17H3V9.5Z" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="tab-lbl">Home</div></button>
+      <button class="tab" onclick="go('s-post')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5L16.5 7V13L10 16.5L3.5 13V7L10 3.5Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L10 10.5L16.5 7" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.5V16.5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Post</div></button>
+      <button class="tab" onclick="go('s-chain')"><div class="tab-icon"><svg width="26" height="16" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.85"/><circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.82"/><circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.88"/></svg></div><div class="tab-lbl">Chains</div></button>
+      <button class="tab" onclick="go('s-message')"><div class="tab-wrap"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12a1 1 0 011 1v7a1 1 0 01-1 1H7.5L4 16V5a1 1 0 011-1z" stroke-width="1.5" stroke-linejoin="round"/></svg></div><span class="tab-badge">1</span></div><div class="tab-lbl">Message</div></button>
+      <button class="tab" onclick="go('s-notifs')"><div class="tab-wrap"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4.5 4.5 0 00-4.5 4.5v2.5L4 13h12l-1.5-2.5V8A4.5 4.5 0 0010 3.5z" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13a1.5 1.5 0 003 0" stroke-width="1.5" stroke-linecap="round"/></svg></div><span class="tab-badge">2</span></div><div class="tab-lbl">Alerts</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Groups -->
+  <!-- SCREEN: Join a Group -->
+  <div class="screen" id="s-join-group">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Groups</span>
+    </div>
+
+    <div class="scroll-body" style="padding-top:4px;">
+
+      <!-- Search -->
+      <div style="position:relative;margin-bottom:18px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);"><circle cx="6" cy="6" r="4.5" stroke="#A49080" stroke-width="1.4"/><path d="M10 10l2.5 2.5" stroke="#A49080" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Search groups…" style="width:100%;padding:10px 14px 10px 32px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:99px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;color:#231C12;box-sizing:border-box;" />
+      </div>
+
+      <!-- Create a group -->
+      <div class="section-label">Start your own</div>
+      <div onclick="go('s-create-group')" style="background:linear-gradient(135deg,#FAE8E3,#FEF6F0);border:1.5px solid #E8C4B4;border-radius:16px;padding:16px;margin-bottom:18px;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:42px;height:42px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 4v10M4 9h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:800;color:#231C12;">Create a group</div>
+            <div style="font-size:12px;color:#7A6E60;margin-top:2px;">Invite parents in your circle to join</div>
+          </div>
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="margin-left:auto;flex-shrink:0;transform:rotate(180deg);"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Nearby groups -->
+      <div class="section-label">Nearby groups</div>
+      <div id="nearby-locked" style="background:#FAF6F0;border:1.5px dashed #D5CBBC;border-radius:16px;padding:18px 16px;text-align:center;margin-bottom:18px;">
+        <div style="font-size:22px;margin-bottom:8px;">📍</div>
+        <div style="font-size:13px;font-weight:700;color:#231C12;margin-bottom:4px;">See groups near you</div>
+        <div style="font-size:12px;color:#7A6E60;margin-bottom:12px;line-height:1.5;">Enable location to find active parent groups in your neighborhood.</div>
+        <button onclick="enableLocation()" style="background:#231C12;color:#fff;border:none;border-radius:99px;padding:9px 20px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Enable location</button>
+      </div>
+      <div id="nearby-groups" style="display:none;margin-bottom:18px;">
+        <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">PS</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Park Slope Crew</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">19 members · 0.3 mi away</div>
+          </div>
+          <button style="background:#C4694F;color:#fff;border:none;border-radius:99px;padding:6px 14px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Join</button>
+        </div>
+        <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#4A5A8C;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">PP</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Prospect Park Parents</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">34 members · 0.8 mi away</div>
+          </div>
+          <button style="background:#C4694F;color:#fff;border:none;border-radius:99px;padding:6px 14px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Join</button>
+        </div>
+      </div>
+
+      <!-- Suggested -->
+      <div class="section-label">Suggested for you</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
+        <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">BP</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Brooklyn Parents</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">42 members · invited by Sarah M.</div>
+          </div>
+          <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 9px;border-radius:99px;font-weight:700;flex-shrink:0;">Joined ✓</span>
+        </div>
+        <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">NM</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#231C12;">NYC Mamas</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">87 members · 3 mutual</div>
+          </div>
+          <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 9px;border-radius:99px;font-weight:700;flex-shrink:0;">Joined ✓</span>
+        </div>
+        <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#A49080;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">WV</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Williamsburg Village</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">28 members · 2 mutual</div>
+          </div>
+          <button style="background:#C4694F;color:#fff;border:none;border-radius:99px;padding:6px 14px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;flex-shrink:0;">Join</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCREEN: Create a Group -->
+  <div class="screen" id="s-create-group">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-join-group')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Create a group</span>
+    </div>
+    <div class="scroll-body">
+
+      <div class="section-label" style="margin-top:8px;">Group name</div>
+      <input type="text" placeholder="e.g. Cobble Hill Parents" value="Cobble Hill Parents"
+        style="width:100%;padding:12px 14px;background:#FAF6F0;border:1.5px solid #D5CBBC;border-radius:12px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:600;color:#231C12;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+
+      <div class="section-label">Neighborhood / area <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#BFB4A4;font-size:10px;">optional</span></div>
+      <input type="text" placeholder="e.g. Brooklyn, NY"
+        style="width:100%;padding:12px 14px;background:#FAF6F0;border:1.5px solid #D5CBBC;border-radius:12px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:500;color:#231C12;outline:none;margin-bottom:16px;box-sizing:border-box;" />
+
+      <div class="section-label">Invite parents</div>
+      <div style="font-size:12px;color:#7A6E60;margin-bottom:12px;line-height:1.5;">Share your group link — only invited members can join.</div>
+
+      <!-- Share options -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+        <button style="display:flex;align-items:center;gap:12px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;">
+          <span style="font-size:20px;">💬</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Send via text message</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">Opens your messages app</div>
+          </div>
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="margin-left:auto;flex-shrink:0;transform:rotate(180deg);"><path d="M7 1L1 6.5L7 12" stroke="#A49080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button style="display:flex;align-items:center;gap:12px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;">
+          <span style="font-size:20px;">🔗</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Copy invite link</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">nextlittle.app/join/cobble-hill-xk9</div>
+          </div>
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="margin-left:auto;flex-shrink:0;transform:rotate(180deg);"><path d="M7 1L1 6.5L7 12" stroke="#A49080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button style="display:flex;align-items:center;gap:12px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Nunito',sans-serif;text-align:left;width:100%;">
+          <span style="font-size:20px;">📲</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#231C12;">Share via WhatsApp</div>
+            <div style="font-size:11px;color:#7A6E60;margin-top:1px;">Send directly to a contact</div>
+          </div>
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="margin-left:auto;flex-shrink:0;transform:rotate(180deg);"><path d="M7 1L1 6.5L7 12" stroke="#A49080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <button class="cta-btn" onclick="go('s-home')">Create group</button>
+      <div style="height:16px;"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Notifications -->
+  <div class="screen" id="s-notifs">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Alerts</span>
+    </div>
+    <div class="scroll-body">
+      <div class="section-label">Today</div>
+
+      <!-- Item available alert (receiving parent) -->
+      <div id="alert-item-available" style="background:#fff;border:1.5px solid #C4694F;border-radius:14px;padding:13px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#C4694F;flex-shrink:0;margin-top:5px;"></div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#231C12;line-height:1.4;">👗 Gap fleece hoodie set (12–18M) is available for Emma!</div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:3px;line-height:1.4;">Cheryl is passing it on from your chain. Do you need it?</div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button onclick="acceptItem(); document.getElementById('alert-item-available').style.display='none';" style="flex:1;padding:7px 0;background:#C4694F;color:#fff;border:none;border-radius:99px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Accept</button>
+            <button onclick="document.getElementById('alert-item-available').style.display='none'; document.getElementById('nudge-item-available') && (document.getElementById('nudge-item-available').style.display='none')" style="flex:1;padding:7px 0;background:#FAF6F0;color:#7A6E60;border:1.5px solid #E0D6C8;border-radius:99px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;">Don't need it</button>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#A49080;flex-shrink:0;">Just now</div>
+      </div>
+
+      <div class="notification" onclick="go('s-edit-profile')" style="cursor:pointer;"><div class="notif-dot" style="background:#e0a030;"></div><div style="flex:1;"><div class="notif-text" style="font-weight:600;">Size check — is Mateo still in 12M?</div><div class="notif-text" style="font-weight:400;margin-top:2px;">Confirm or update his size so your chain stays accurate.</div><div class="notif-time">Today</div></div><svg width="6" height="10" viewBox="0 0 6 10" fill="none" style="flex-shrink:0;margin-top:4px;"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="section-label" style="margin-top:16px;">Yesterday</div>
+      <div class="notification" onclick="go('s-message-thread-nia')" style="opacity:0.8;cursor:pointer;"><div class="notif-dot" style="background:#C4694F;"></div><div style="flex:1;"><div class="notif-text">Nia's mom accepted your 3x onesies (12M).</div><div class="notif-text" style="font-weight:400;color:#7A6E60;margin-top:1px;">Tap to coordinate pickup or shipping.</div><div class="notif-time">Yesterday</div></div><svg width="6" height="10" viewBox="0 0 6 10" fill="none" style="flex-shrink:0;margin-top:4px;"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="notification" onclick="go('s-chain')" style="opacity:0.8;cursor:pointer;"><div class="notif-dot" style="background:#BFB4A4;"></div><div style="flex:1;"><div class="notif-text">Lucas M. posted 5 items in your size range.</div><div class="notif-time">Yesterday</div></div><svg width="6" height="10" viewBox="0 0 6 10" fill="none" style="flex-shrink:0;margin-top:4px;"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="notification" onclick="go('s-join-group')" style="opacity:0.8;cursor:pointer;"><div class="notif-dot" style="background:#7A9E7E;"></div><div style="flex:1;"><div class="notif-text">You were added to <strong>Brooklyn Parents</strong> by Sarah M.</div><div class="notif-time">Yesterday</div></div><svg width="6" height="10" viewBox="0 0 6 10" fill="none" style="flex-shrink:0;margin-top:4px;"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab" onclick="go('s-home')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 9.5L10 3.5L17 9.5V17H13V12.5H7V17H3V9.5Z" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="tab-lbl">Home</div></button>
+      <button class="tab" onclick="go('s-post')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5L16.5 7V13L10 16.5L3.5 13V7L10 3.5Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L10 10.5L16.5 7" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.5V16.5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Post</div></button>
+      <button class="tab" onclick="go('s-chain')"><div class="tab-icon"><svg width="26" height="16" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.85"/><circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.82"/><circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.88"/></svg></div><div class="tab-lbl">Chains</div></button>
+      <button class="tab" onclick="go('s-message')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12a1 1 0 011 1v7a1 1 0 01-1 1H7.5L4 16V5a1 1 0 011-1z" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="tab-lbl">Message</div></button>
+      <button class="tab active"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4.5 4.5 0 00-4.5 4.5v2.5L4 13h12l-1.5-2.5V8A4.5 4.5 0 0010 3.5z" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13a1.5 1.5 0 003 0" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Alerts</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Chain -->
+  <div class="screen" id="s-chain">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar" style="padding-bottom:6px;">
+      <span class="topbar-title" style="font-size:16px;font-weight:800;color:#231C12;">Your Next Little Chain</span>
+    </div>
+
+    <div class="scroll-body" style="padding-top:0;">
+
+      <!-- ── Blurb ── -->
+      <div style="background:linear-gradient(135deg,#EAF0EA,#F5EDE8);border-radius:14px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">🔗</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#231C12;margin-bottom:2px;">Find your next little here</div>
+          <div style="font-size:11px;color:#7A6E60;line-height:1.5;">Easily find your next little here.</div>
+        </div>
+      </div>
+
+      <!-- ── Sort toggle ── -->
+      <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <div id="tog-age" onclick="chainToggle('age')" style="flex:1;text-align:center;padding:7px 0;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;background:#C4694F;color:#fff;transition:all 0.15s;">By age</div>
+        <div id="tog-size" onclick="chainToggle('size')" style="flex:1;text-align:center;padding:7px 0;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;background:#F5EDE8;color:#A49080;transition:all 0.15s;">By size</div>
+      </div>
+
+      <!-- ── Group filter toggle ── -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;">
+        <div class="chain-grp-tab active" onclick="chainGroupTab(this)" style="white-space:nowrap;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;background:#231C12;color:#fff;flex-shrink:0;">All groups</div>
+        <div class="chain-grp-tab" onclick="chainGroupTab(this)" style="white-space:nowrap;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;background:#F5EDE8;color:#A49080;flex-shrink:0;">Brooklyn Parents</div>
+        <div class="chain-grp-tab" onclick="chainGroupTab(this)" style="white-space:nowrap;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;background:#F5EDE8;color:#A49080;flex-shrink:0;">NYC Mamas</div>
+        <div class="chain-grp-tab" onclick="chainGroupTab(this)" style="white-space:nowrap;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;cursor:pointer;background:#F5EDE8;color:#A49080;flex-shrink:0;">Park Slope Crew</div>
+      </div>
+
+      <!-- ── Chain list ── -->
+      <div id="chain-list" style="position:relative;">
+
+        <!-- Vertical connector line -->
+        <div style="position:absolute;left:22px;top:28px;bottom:28px;width:2px;background:linear-gradient(to bottom,#E0D6C8,#E0D6C8);border-radius:2px;z-index:0;"></div>
+
+        <!-- Members injected by JS -->
+      </div>
+
+      <div style="height:8px;"></div>
+
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab" onclick="go('s-home')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 9.5L10 3.5L17 9.5V17H13V12.5H7V17H3V9.5Z" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="tab-lbl">Home</div></button>
+      <button class="tab" onclick="go('s-post')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5L16.5 7V13L10 16.5L3.5 13V7L10 3.5Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L10 10.5L16.5 7" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.5V16.5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Post</div></button>
+      <button class="tab active"><div class="tab-icon"><svg width="26" height="16" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.85"/><circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.82"/><circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.88"/></svg></div><div class="tab-lbl">Chains</div></button>
+      <button class="tab" onclick="go('s-message')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12a1 1 0 011 1v7a1 1 0 01-1 1H7.5L4 16V5a1 1 0 011-1z" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="tab-lbl">Message</div></button>
+      <button class="tab" onclick="go('s-notifs')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4.5 4.5 0 00-4.5 4.5v2.5L4 13h12l-1.5-2.5V8A4.5 4.5 0 0010 3.5z" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13a1.5 1.5 0 003 0" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Alerts</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Ready to pass it on -->
+  <div class="screen" id="s-post">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="topbar-title">Ready to pass it on</span>
+    </div>
+
+    <div class="scroll-body">
+
+      <!-- ── Category ── -->
+      <div class="section-label" style="margin-top:8px;">Category</div>
+      <div class="chip-wrap" id="post-cat-chips" style="margin-bottom:6px;">
+        <div class="chip selected" data-cat="clothing" onclick="selectPostCategory(this)">👗 Clothing</div>
+        <div class="chip" data-cat="gear"     onclick="selectPostCategory(this)">🪑 Gear</div>
+        <div class="chip" data-cat="toys"     onclick="selectPostCategory(this)">🧸 Toys</div>
+        <div class="chip" data-cat="books"    onclick="selectPostCategory(this)">📚 Books</div>
+        <div class="chip" data-cat="mama"     onclick="selectPostCategory(this)">🌸 For the mama</div>
+      </div>
+
+      <!-- ── Dynamic: Clothing → size + bulk toggle ── -->
+      <div id="post-dynamic-clothing" style="margin-bottom:4px;">
+        <div class="section-label">Size</div>
+        <div class="chip-wrap" style="margin-bottom:6px;">
+          <div class="chip" onclick="toggleSizeChip(this)">Preemie</div>
+          <div class="chip" onclick="toggleSizeChip(this)">NB</div>
+          <div class="chip" onclick="toggleSizeChip(this)">0–3M</div>
+          <div class="chip" onclick="toggleSizeChip(this)">3–6M</div>
+          <div class="chip" onclick="toggleSizeChip(this)">6–9M</div>
+          <div class="chip" onclick="toggleSizeChip(this)">9–12M</div>
+          <div class="chip selected" onclick="toggleSizeChip(this)">12–18M</div>
+          <div class="chip" onclick="toggleSizeChip(this)">18–24M</div>
+          <div class="chip" onclick="toggleSizeChip(this)">2T</div>
+          <div class="chip" onclick="toggleSizeChip(this)">3T</div>
+          <div class="chip" onclick="toggleSizeChip(this)">4T+</div>
+        </div>
+        <div class="section-label">Quantity</div>
+        <div class="chip-wrap" style="margin-bottom:4px;">
+          <div class="chip selected" onclick="toggleSizeChip(this)">One piece</div>
+          <div class="chip" onclick="toggleSizeChip(this)">Bulk / bundle</div>
+        </div>
+        <div style="font-size:11px;color:#A49080;margin-bottom:14px;">Items Mateo has outgrown or has extras of</div>
+      </div>
+
+      <!-- ── Dynamic: Gear / Toys / Books → age range (optional) ── -->
+      <div id="post-dynamic-age" style="display:none;margin-bottom:4px;">
+        <div class="section-label">Age range <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#BFB4A4;font-size:10px;">optional</span></div>
+        <div class="chip-wrap" style="margin-bottom:14px;">
+          <div class="chip" onclick="toggleSizeChip(this)">🐣 Newborn</div>
+          <div class="chip" onclick="toggleSizeChip(this)">🍼 Infant</div>
+          <div class="chip" onclick="toggleSizeChip(this)">🚶 Toddler</div>
+        </div>
+      </div>
+
+      <!-- ── Photos ── -->
+      <div class="section-label" style="margin-top:4px;">Photos</div>
+      <div style="margin-bottom:4px;">
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;height:130px;">
+          <div style="border:1.5px dashed #C4694F;border-radius:16px;background:#FEF8F5;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:6px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#C4694F" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="#C4694F" stroke-width="1.5"/><path d="M3 17L8 12L12 16L16 13L21 17" stroke="#C4694F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-size:12px;color:#C4694F;font-weight:700;">Add main photo</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="flex:1;border:1.5px dashed #D5CBBC;border-radius:12px;background:#FAF6F0;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="font-size:18px;color:#D5CBBC;">+</span></div>
+            <div style="flex:1;border:1.5px dashed #D5CBBC;border-radius:12px;background:#FAF6F0;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="font-size:18px;color:#D5CBBC;">+</span></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#A49080;margin-top:6px;text-align:center;margin-bottom:14px;">Up to 3 photos · clear, well-lit helps your item move faster</div>
+      </div>
+
+      <!-- ── Description (optional) ── -->
+      <div class="section-label">Description <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#BFB4A4;font-size:10px;">optional</span></div>
+      <input type="text" placeholder="e.g. Gap fleece hoodie set, barely worn"
+        style="width:100%;padding:12px 14px;background:#FAF6F0;border:1.5px solid #D5CBBC;border-radius:12px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:500;color:#231C12;outline:none;margin-bottom:16px;box-sizing:border-box;"
+      />
+
+      <!-- ── Post to group ── -->
+      <div class="section-label">Post to</div>
+      <div style="margin-bottom:6px;">
+        <div id="post-group-all" onclick="togglePostGroup('all')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#FAF6F0;border:1.5px solid #7A9E7E;border-radius:12px;cursor:pointer;margin-bottom:8px;">
+          <div style="width:20px;height:20px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#231C12;">All my groups</div><div style="font-size:11px;color:#7A6E60;margin-top:1px;">Brooklyn Parents · NYC Mamas · Park Slope Crew</div></div>
+        </div>
+        <div style="font-size:11px;color:#A49080;margin-bottom:8px;font-weight:600;letter-spacing:0.04em;">OR PICK ONE</div>
+        <div style="display:flex;flex-direction:column;gap:6px;" id="post-group-list">
+          <div class="post-group-row" onclick="togglePostGroup('g1')" data-gid="g1" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:12px;cursor:pointer;"><div class="post-group-check" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #D5CBBC;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:700;color:#231C12;">Brooklyn Parents</div><div style="font-size:11px;color:#7A6E60;">42 members · your main chain</div></div></div>
+          <div class="post-group-row" onclick="togglePostGroup('g2')" data-gid="g2" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:12px;cursor:pointer;"><div class="post-group-check" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #D5CBBC;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:700;color:#231C12;">NYC Mamas</div><div style="font-size:11px;color:#7A6E60;">87 members</div></div></div>
+          <div class="post-group-row" onclick="togglePostGroup('g3')" data-gid="g3" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:12px;cursor:pointer;"><div class="post-group-check" style="width:20px;height:20px;border-radius:50%;border:1.5px solid #D5CBBC;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:700;color:#231C12;">Park Slope Crew</div><div style="font-size:11px;color:#7A6E60;">19 members</div></div></div>
+        </div>
+      </div>
+
+      <!-- ── How to pass ── -->
+      <div class="section-label" style="margin-top:16px;">How to pass it on</div>
+      <div class="chip-wrap" style="margin-bottom:20px;">
+        <div class="chip selected" onclick="toggleSizeChip(this)">📍 Local pickup</div>
+        <div class="chip" onclick="toggleSizeChip(this)">📬 Ship / mail</div>
+      </div>
+
+      <!-- ── Condition check (last step) ── -->
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:4px 4px;margin-bottom:16px;">
+        <div class="checklist-item" id="post-checklist" onclick="toggleCheck(this)" style="padding:13px 12px;border-bottom:none;">
+          <div class="check-box"></div>
+          <span class="check-label" style="line-height:1.5;">I confirm this item is clean, undamaged, and in good condition to pass on to the next family.</span>
+        </div>
+      </div>
+
+      <!-- ── CTA ── -->
+      <button id="post-cta" class="cta-btn" onclick="go('s-post-sent')" style="opacity:0.5;pointer-events:none;">Pass it on!</button>
+      <div id="post-cta-hint" style="font-size:11px;color:#A49080;text-align:center;margin-top:8px;margin-bottom:8px;line-height:1.5;">Confirm condition above to pass it on ↑</div>
+
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab" onclick="go('s-home')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 9.5L10 3.5L17 9.5V17H13V12.5H7V17H3V9.5Z" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="tab-lbl">Home</div></button>
+      <button class="tab active"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5L16.5 7V13L10 16.5L3.5 13V7L10 3.5Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L10 10.5L16.5 7" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.5V16.5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Post</div></button>
+      <button class="tab" onclick="go('s-chain')"><div class="tab-icon"><svg width="26" height="16" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.85"/><circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.82"/><circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.88"/></svg></div><div class="tab-lbl">Chains</div></button>
+      <button class="tab" onclick="go('s-message')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12a1 1 0 011 1v7a1 1 0 01-1 1H7.5L4 16V5a1 1 0 011-1z" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="tab-lbl">Message</div></button>
+      <button class="tab" onclick="go('s-notifs')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4.5 4.5 0 00-4.5 4.5v2.5L4 13h12l-1.5-2.5V8A4.5 4.5 0 0010 3.5z" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13a1.5 1.5 0 003 0" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Alerts</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Message -->
+  <div class="screen" id="s-message">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar" style="padding-bottom:6px;">
+      <span class="topbar-title" style="font-size:16px;font-weight:800;color:#231C12;">Messages</span>
+    </div>
+    <div class="scroll-body" style="padding-top:4px;">
+
+      <!-- Thread: Nia's mom -->
+      <div onclick="go('s-message-thread')" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #F0E8DC;cursor:pointer;">
+        <div style="position:relative;flex-shrink:0;">
+          <div style="width:46px;height:46px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;">NM</div>
+          <div style="position:absolute;bottom:0;right:0;width:12px;height:12px;background:#7A9E7E;border-radius:50%;border:2px solid #fff;"></div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-size:14px;font-weight:800;color:#231C12;">Nia's mom · Sofia R.</div>
+            <div style="font-size:10px;color:#A49080;flex-shrink:0;margin-left:8px;">2h ago</div>
+          </div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Works for me! I'll swing by Saturday around 10am 👍</div>
+        </div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#C4694F;flex-shrink:0;"></div>
+      </div>
+
+      <!-- Thread: Sarah M. -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #F0E8DC;cursor:pointer;opacity:0.8;">
+        <div style="flex-shrink:0;">
+          <div style="width:46px;height:46px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;">SM</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-size:14px;font-weight:800;color:#231C12;">Sarah M.</div>
+            <div style="font-size:10px;color:#A49080;flex-shrink:0;margin-left:8px;">Yesterday</div>
+          </div>
+          <div style="font-size:12px;color:#A49080;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">You: Thanks so much, everything was perfect!</div>
+        </div>
+      </div>
+
+      <!-- Thread: Emma B. -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #F0E8DC;cursor:pointer;opacity:0.8;">
+        <div style="flex-shrink:0;">
+          <div style="width:46px;height:46px;border-radius:50%;background:#4A5A8C;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;">EB</div>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-size:14px;font-weight:800;color:#231C12;">Emma B.</div>
+            <div style="font-size:10px;color:#A49080;flex-shrink:0;margin-left:8px;">Mon</div>
+          </div>
+          <div style="font-size:12px;color:#A49080;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">She's going to love those overalls 🥹</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:24px 0;color:#BFB4A4;font-size:12px;">You're all caught up ✓</div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab" onclick="go('s-home')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 9.5L10 3.5L17 9.5V17H13V12.5H7V17H3V9.5Z" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></div><div class="tab-lbl">Home</div></button>
+      <button class="tab" onclick="go('s-post')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5L16.5 7V13L10 16.5L3.5 13V7L10 3.5Z" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L10 10.5L16.5 7" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.5V16.5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Post</div></button>
+      <button class="tab" onclick="go('s-chain')"><div class="tab-icon"><svg width="26" height="16" viewBox="0 0 100 62" fill="none"><circle cx="28" cy="31" r="26" fill="#7A9E7E" fill-opacity="0.85"/><circle cx="57" cy="31" r="20" fill="#C4694F" fill-opacity="0.82"/><circle cx="78" cy="31" r="14" fill="#4A5A8C" fill-opacity="0.88"/></svg></div><div class="tab-lbl">Chains</div></button>
+      <button class="tab active"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12a1 1 0 011 1v7a1 1 0 01-1 1H7.5L4 16V5a1 1 0 011-1z" stroke-width="1.5" stroke-linejoin="round"/></svg></div><div class="tab-lbl">Message</div></button>
+      <button class="tab" onclick="go('s-notifs')"><div class="tab-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5a4.5 4.5 0 00-4.5 4.5v2.5L4 13h12l-1.5-2.5V8A4.5 4.5 0 0010 3.5z" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 13a1.5 1.5 0 003 0" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="tab-lbl">Alerts</div></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Message thread — auto-populated on accept -->
+  <div class="screen" id="s-message-thread">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-message')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:30px;height:30px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;">SB</div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#231C12;line-height:1.2;">Sarah B. · Emma</div>
+          <div style="font-size:10px;color:#7A9E7E;font-weight:600;">Online</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-body" style="display:flex;flex-direction:column;gap:10px;padding-top:8px;">
+
+      <!-- Auto-populated context card -->
+      <div style="background:#EAF0EA;border:1px solid #C8D8C8;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <span style="font-size:18px;">👗</span>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:700;color:#231C12;">Gap fleece hoodie set · 12–18M</div>
+          <div style="font-size:11px;color:#3A6A3A;">Sarah accepted for Emma 🎉</div>
+        </div>
+        <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;">Accepted ✓</span>
+      </div>
+
+      <!-- Auto-generated opening message (system) -->
+      <div style="text-align:center;">
+        <span style="font-size:11px;background:#F0EAE0;color:#7A6E60;padding:4px 12px;border-radius:99px;">Next Little connected you · Just now</span>
+      </div>
+
+      <!-- Auto-populated first message from poster's side -->
+      <div style="display:flex;justify-content:flex-end;">
+        <div style="background:#C4694F;color:#fff;border-radius:16px 16px 4px 16px;padding:10px 14px;max-width:80%;font-size:13px;line-height:1.5;">
+          Hi Sarah! 👋 Excited to pass on the Gap hoodie set to Emma. How would you like to coordinate — local pickup or should I ship it?
+        </div>
+      </div>
+      <div style="font-size:10px;color:#A49080;text-align:right;margin-top:-6px;">Just now · Sent</div>
+
+    </div>
+
+    <!-- Input bar -->
+    <div style="padding:10px 16px 14px;border-top:1px solid #E0D6C8;display:flex;align-items:center;gap:8px;background:#fff;flex-shrink:0;">
+      <input type="text" placeholder="Message Sarah…" style="flex:1;padding:10px 14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:99px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;color:#231C12;" />
+      <button style="width:36px;height:36px;border-radius:50%;background:#C4694F;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Message thread — Nia's mom (existing) -->
+  <div class="screen" id="s-message-thread-nia">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-message')">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:30px;height:30px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;">NM</div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#231C12;line-height:1.2;">Nia's mom</div>
+          <div style="font-size:10px;color:#7A9E7E;font-weight:600;">Online</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-body" style="display:flex;flex-direction:column;gap:10px;padding-top:8px;">
+      <div style="background:#FAF6F0;border:1px solid #E0D6C8;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <span style="font-size:18px;">👗</span>
+        <div><div style="font-size:12px;font-weight:700;color:#231C12;">Gap fleece hoodie set · 12M</div><div style="font-size:11px;color:#7A6E60;">Passing to Sofia R.</div></div>
+        <span style="margin-left:auto;font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;">Active</span>
+      </div>
+      <div style="display:flex;justify-content:flex-end;"><div style="background:#C4694F;color:#fff;border-radius:16px 16px 4px 16px;padding:10px 14px;max-width:75%;font-size:13px;line-height:1.5;">Hey! Wanted to coordinate pickup for the hoodie set. Are you free this weekend?</div></div>
+      <div style="font-size:10px;color:#A49080;text-align:right;margin-top:-6px;">10:14 AM · Read</div>
+      <div style="display:flex;justify-content:flex-start;"><div style="background:#F0EAE0;color:#231C12;border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:75%;font-size:13px;line-height:1.5;">Yes! Saturday or Sunday work. Morning is best 🌞</div></div>
+      <div style="font-size:10px;color:#A49080;margin-top:-6px;">10:22 AM</div>
+      <div style="display:flex;justify-content:flex-end;"><div style="background:#C4694F;color:#fff;border-radius:16px 16px 4px 16px;padding:10px 14px;max-width:75%;font-size:13px;line-height:1.5;">Saturday morning works! Does 10am at the park work?</div></div>
+      <div style="font-size:10px;color:#A49080;text-align:right;margin-top:-6px;">10:25 AM · Read</div>
+      <div style="display:flex;justify-content:flex-start;"><div style="background:#F0EAE0;color:#231C12;border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:75%;font-size:13px;line-height:1.5;">Works for me! I'll swing by Saturday around 10am 👍</div></div>
+      <div style="font-size:10px;color:#A49080;margin-top:-6px;">2h ago</div>
+
+      <!-- Confirm receipt prompt -->
+      <div style="background:#EAF0EA;border:1.5px solid #C8D8C8;border-radius:13px;padding:11px 12px;display:flex;align-items:center;gap:10px;margin-top:6px;">
+        <span style="font-size:18px;flex-shrink:0;">📬</span>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:700;color:#231C12;">Pickup is tomorrow!</div>
+          <div style="font-size:11px;color:#3A6A3A;margin-top:1px;line-height:1.4;">After you pick it up, confirm receipt to close the pass.</div>
+        </div>
+        <button onclick="go('s-item-received')" style="background:#7A9E7E;color:#fff;border:none;border-radius:99px;padding:7px 12px;font-size:11px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;flex-shrink:0;">Confirm →</button>
+      </div>
+    </div>
+    <div style="padding:10px 16px 14px;border-top:1px solid #E0D6C8;display:flex;align-items:center;gap:8px;background:#fff;flex-shrink:0;">
+      <input type="text" placeholder="Message Nia's mom…" style="flex:1;padding:10px 14px;background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:99px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;color:#231C12;" />
+      <button style="width:36px;height:36px;border-radius:50%;background:#C4694F;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Post Sent — Notified families -->
+  <div class="screen" id="s-post-sent">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+
+    <div class="scroll-body" style="padding-top:0;">
+
+      <!-- Success header -->
+      <div style="background:linear-gradient(150deg,#C4694F,#D4856A);border-radius:0 0 22px 22px;padding:28px 20px 22px;margin:0 -20px 20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:8px;">🎉</div>
+        <div style="font-size:19px;font-weight:800;color:#fff;letter-spacing:-0.3px;margin-bottom:4px;">All set!</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.80);line-height:1.5;">Families in your chain have been notified.</div>
+      </div>
+
+      <!-- Item summary card -->
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+        <div style="width:42px;height:42px;border-radius:10px;background:#F5EDE8;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👗</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:800;color:#231C12;">Gap fleece hoodie set</div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:2px;">Clothing · 12–18M · One piece</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-shrink:0;">
+          <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;">Brooklyn Parents</span>
+        </div>
+      </div>
+
+      <!-- Notified families -->
+      <div class="section-label">Who was notified</div>
+      <div style="font-size:12px;color:#7A6E60;margin-bottom:12px;line-height:1.5;">These parents are in your chain and matched the size you posted.</div>
+
+      <!-- Member 1 — primary match -->
+      <div style="background:#FAF6F0;border:1.5px solid #C8D8C8;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+        <div style="position:relative;flex-shrink:0;">
+          <div style="width:42px;height:42px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;">EB</div>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:13px;font-weight:800;color:#231C12;">Emma B.</span>
+            <span style="font-size:10px;background:#C4694F;color:#fff;padding:2px 7px;border-radius:99px;font-weight:700;">Next in line</span>
+          </div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:2px;">Sarah B. · 11 mo · currently 12–18M</div>
+          <div style="font-size:11px;color:#7A9E7E;margin-top:3px;font-weight:600;">📍 Brooklyn Parents · Local pickup</div>
+        </div>
+      </div>
+
+      <!-- Member 2 -->
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
+        <div style="flex-shrink:0;">
+          <div style="width:42px;height:42px;border-radius:50%;background:#8A8FBC;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;">NA</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#231C12;">Noah A.</div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:2px;">David A. · 8 mo · currently 9–12M</div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:3px;font-weight:600;">📍 Brooklyn Parents · Local pickup</div>
+        </div>
+      </div>
+
+      <!-- Member 3 — different group -->
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+        <div style="flex-shrink:0;">
+          <div style="width:42px;height:42px;border-radius:50%;background:#A49080;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;">AC</div>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#231C12;">Ava C.</div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:2px;">Carmen C. · 5 mo · currently 6–9M</div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:3px;font-weight:600;">🏘️ NYC Mamas · Ship / mail</div>
+        </div>
+      </div>
+
+      <!-- Shared to groups -->
+      <div class="section-label">Shared to</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+        <span style="font-size:12px;background:#EAF0EA;color:#3A6A3A;padding:6px 12px;border-radius:99px;font-weight:700;">Brooklyn Parents · 42 members</span>
+        <span style="font-size:12px;background:#EAF0EA;color:#3A6A3A;padding:6px 12px;border-radius:99px;font-weight:700;">NYC Mamas · 87 members</span>
+      </div>
+
+      <!-- CTAs -->
+      <button class="cta-btn" onclick="go('s-home')" style="margin-bottom:10px;">Back to home</button>
+      <button onclick="go('s-post')" style="width:100%;padding:13px;background:transparent;border:1.5px solid #E0D6C8;border-radius:99px;font-size:14px;font-weight:700;color:#7A6E60;font-family:'Nunito',sans-serif;cursor:pointer;">Post another item</button>
+      <div style="height:16px;"></div>
+
+    </div>
+  </div>
+
+  <!-- SCREEN: My Posts -->
+  <div class="screen" id="s-my-posts">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')"><svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="topbar-title">My posts</span>
+    </div>
+    <div class="scroll-body">
+      <div class="section-label" style="margin-top:8px;">Currently passing</div>
+      <!-- Active item card -->
+      <div style="background:#fff;border:1.5px solid #C8D8C8;border-radius:14px;padding:13px 14px;margin-bottom:12px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:42px;height:42px;border-radius:10px;background:#F5EDE8;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👗</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+              <div style="font-size:13px;font-weight:800;color:#231C12;">Gap fleece hoodie set</div>
+              <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;flex-shrink:0;white-space:nowrap;">Active</span>
+            </div>
+            <div style="font-size:12px;color:#7A6E60;margin-top:2px;">Clothing · 12–18M</div>
+            <div style="font-size:12px;color:#7A9E7E;margin-top:5px;font-weight:600;">Emma B. accepted · Pickup Saturday 10am</div>
+          </div>
+        </div>
+        <!-- Progress steps -->
+        <div style="display:flex;align-items:center;gap:0;margin-top:12px;padding-top:10px;border-top:1px solid #EAF0EA;">
+          <div style="flex:1;text-align:center;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#7A9E7E;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div style="font-size:9px;color:#3A6A3A;font-weight:700;">Posted</div>
+          </div>
+          <div style="flex:1;height:2px;background:#7A9E7E;margin-bottom:14px;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#7A9E7E;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div style="font-size:9px;color:#3A6A3A;font-weight:700;">Claimed</div>
+          </div>
+          <div style="flex:1;height:2px;background:#E0D6C8;margin-bottom:14px;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#F0D4A0;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#A05820;font-weight:800;">→</div>
+            <div style="font-size:9px;color:#A05820;font-weight:700;">In transit</div>
+          </div>
+          <div style="flex:1;height:2px;background:#E0D6C8;margin-bottom:14px;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#E0D6C8;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#A49080;font-weight:700;">4</div>
+            <div style="font-size:9px;color:#A49080;font-weight:600;">Received</div>
+          </div>
+        </div>
+        <button onclick="go('s-message-thread-nia')" style="width:100%;margin-top:10px;padding:8px;background:transparent;border:1.5px solid #E0D6C8;border-radius:99px;font-size:12px;font-weight:700;color:#7A6E60;font-family:'Nunito',sans-serif;cursor:pointer;">View message thread →</button>
+      </div>
+
+      <div class="section-label" style="margin-top:4px;">Past passes</div>
+
+      <div class="history-item">
+        <div class="history-top">
+          <div><div class="history-title">3× onesies bundle · 12M</div><div class="history-sub">Passed to Sofia R. · Nia T.</div></div>
+          <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;">Received ✓</span>
+        </div>
+        <div class="history-note">Oct 2025 · Brooklyn Parents · Local pickup</div>
+      </div>
+
+      <div class="history-item" style="margin-top:8px;">
+        <div class="history-top">
+          <div><div class="history-title">Carter's zip-up sleeper set · 9M</div><div class="history-sub">Passed to Mia K. · Kate R.</div></div>
+          <span style="font-size:10px;background:#EAF0EA;color:#3A6A3A;padding:3px 8px;border-radius:99px;font-weight:700;">Received ✓</span>
+        </div>
+        <div class="history-note">Aug 2025 · Brooklyn Parents · Shipped</div>
+      </div>
+
+      <div class="history-item" style="margin-top:8px;">
+        <div class="history-top">
+          <div><div class="history-title">Board book set (6 books)</div><div class="history-sub">No one in chain needed it</div></div>
+          <span style="font-size:10px;background:#F5EDE8;color:#A49080;padding:3px 8px;border-radius:99px;font-weight:700;">Donated</span>
+        </div>
+        <div class="history-note">Jul 2025 · Donated to local library</div>
+      </div>
+
+      <div style="text-align:center;padding:20px 0 8px;color:#BFB4A4;font-size:12px;line-height:1.6;">3 items passed · 3 families helped ✨</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Member Profile -->
+  <div class="screen" id="s-member-profile">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-chain')"><svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="topbar-title" id="mp-topbar-title">Profile</span>
+    </div>
+    <div class="scroll-body">
+
+      <!-- Hero -->
+      <div style="text-align:center;padding:20px 0 18px;">
+        <div id="mp-avatar" style="width:72px;height:72px;border-radius:50%;background:#D4917F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:800;margin:0 auto 12px;box-shadow:0 6px 18px rgba(0,0,0,0.13);">SR</div>
+        <div id="mp-kid-name" style="font-size:20px;font-weight:800;color:#231C12;letter-spacing:-0.3px;">Sofia R.</div>
+        <div id="mp-parent-name" style="font-size:13px;color:#7A6E60;margin-top:3px;font-weight:600;">Parent: Nia T.</div>
+        <div id="mp-location-lbl" style="font-size:12px;color:#A49080;margin-top:2px;">Brooklyn, NY</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-num" id="mp-stat-passed">12</div><div class="stat-lbl">Passed on</div></div>
+        <div class="stat-box"><div class="stat-num" id="mp-stat-received">8</div><div class="stat-lbl">Received</div></div>
+        <div class="stat-box"><div style="color:#7A9E7E;font-size:16px;font-weight:800;line-height:1.2;">✓</div><div class="stat-lbl">Verified</div></div>
+      </div>
+
+      <!-- Chain details -->
+      <div class="section-label" style="margin-top:14px;">In your chain</div>
+      <div style="background:#fff;border:1.5px solid #E0D6C8;border-radius:13px;padding:12px 14px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #F0E8DC;">
+          <span style="font-size:13px;font-weight:600;color:#231C12;">Age</span>
+          <span id="mp-age-lbl" style="font-size:13px;color:#7A6E60;">2 wks</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 4px;">
+          <span style="font-size:13px;font-weight:600;color:#231C12;">Size</span>
+          <span id="mp-size-lbl" style="font-size:13px;color:#7A6E60;">NB</span>
+        </div>
+        <div style="height:1px;background:#F0E8DC;margin-bottom:8px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">
+          <span style="font-size:13px;font-weight:600;color:#231C12;">Chain position</span>
+          <span id="mp-chain-pos" style="font-size:12px;color:#C4694F;font-weight:700;background:#FAE8E3;padding:3px 10px;border-radius:99px;">Receives from you</span>
+        </div>
+      </div>
+
+      <!-- Vouched by -->
+      <div class="section-label">Vouched by</div>
+      <div style="display:flex;align-items:center;gap:10px;background:#EAF0EA;border-radius:13px;padding:12px 14px;margin-bottom:14px;">
+        <div id="mp-voucher-avatar" style="width:36px;height:36px;border-radius:50%;background:#7A9E7E;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;">SM</div>
+        <div><div id="mp-voucher-name" style="font-size:13px;font-weight:700;color:#231C12;">Sarah M.</div><div style="font-size:11px;color:#3A6A3A;margin-top:1px;">Member since 2024 · Brooklyn Parents</div></div>
+        <span style="margin-left:auto;font-size:11px;background:#fff;color:#3A6A3A;padding:3px 9px;border-radius:99px;font-weight:700;flex-shrink:0;">Vouched ✓</span>
+      </div>
+
+      <!-- Groups in common -->
+      <div class="section-label">Groups in common</div>
+      <div id="mp-groups" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;">
+        <span style="font-size:12px;background:#FAF6F0;color:#7A6E60;padding:5px 12px;border-radius:99px;border:1.5px solid #E0D6C8;font-weight:600;">Brooklyn Parents</span>
+      </div>
+
+      <!-- CTA -->
+      <button id="mp-message-btn" class="cta-btn" onclick="go('s-message')" style="margin-bottom:8px;">Message Nia T.</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Confirm Item Received -->
+  <div class="screen" id="s-item-received">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-message-thread-nia')"><svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="topbar-title">Confirm receipt</span>
+    </div>
+    <div class="scroll-body">
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;padding:14px 16px;margin-bottom:22px;margin-top:8px;display:flex;align-items:center;gap:12px;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#F5EDE8;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👗</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#231C12;">Gap fleece hoodie set</div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:2px;">Clothing · 12M · One piece</div>
+          <div style="font-size:11px;color:#7A6E60;margin-top:2px;">Passed by Cheryl (Mateo's mom)</div>
+        </div>
+      </div>
+
+      <div class="section-label">Before you confirm</div>
+      <div style="background:#FAF6F0;border:1.5px solid #E0D6C8;border-radius:14px;overflow:hidden;margin-bottom:22px;">
+        <div class="checklist-item" id="recv-check-1" onclick="toggleRecvCheck(this)">
+          <div class="check-box"></div>
+          <span class="check-label">I received the item in person or by mail</span>
+        </div>
+        <div class="checklist-item" id="recv-check-2" onclick="toggleRecvCheck(this)">
+          <div class="check-box"></div>
+          <span class="check-label">The item is as described — good condition</span>
+        </div>
+      </div>
+
+      <button id="recv-cta" class="cta-btn" onclick="go('s-item-received-done')" style="opacity:0.5;pointer-events:none;margin-bottom:8px;">Mark as received</button>
+      <div id="recv-cta-hint" style="font-size:11px;color:#A49080;text-align:center;line-height:1.5;">Check both boxes above to confirm ↑</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Item Received — Done -->
+  <div class="screen" id="s-item-received-done">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;">
+      <svg width="64" height="42" viewBox="0 0 96 60" fill="none" style="margin-bottom:20px;">
+        <circle cx="26" cy="30" r="25" fill="#7A9E7E" fill-opacity="0.82"/>
+        <circle cx="54" cy="30" r="19" fill="#C4694F" fill-opacity="0.78"/>
+        <circle cx="74" cy="30" r="14" fill="#4A5A8C" fill-opacity="0.86"/>
+      </svg>
+      <div style="font-size:24px;font-weight:800;color:#231C12;letter-spacing:-0.4px;margin-bottom:8px;">The chain continues! 🎉</div>
+      <div style="font-size:14px;color:#7A6E60;line-height:1.65;margin-bottom:6px;">Sofia now has the Gap hoodie set.</div>
+      <div style="font-size:13px;color:#7A9E7E;font-weight:600;margin-bottom:28px;">Cheryl has been notified ✓</div>
+      <div style="background:#EAF0EA;border:1.5px solid #C8D8C8;border-radius:14px;padding:14px 16px;margin-bottom:28px;width:100%;text-align:left;">
+        <div style="font-size:13px;font-weight:700;color:#231C12;margin-bottom:4px;">When Sofia grows out of it</div>
+        <div style="font-size:12px;color:#3A6A3A;line-height:1.55;">You'll be notified to pass it on to the next little one. That's how the magic works 💚</div>
+      </div>
+      <button class="cta-btn" onclick="go('s-home')" style="width:100%;">Back to home</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: My Groups -->
+  <div class="screen" id="s-my-groups">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-settings')"><svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="topbar-title">My groups</span>
+    </div>
+    <div class="scroll-body">
+      <div class="section-label" style="margin-top:8px;">Your groups</div>
+
+      <div class="group-card">
+        <div class="group-top">
+          <div><div class="group-name">Brooklyn Parents</div><div class="group-meta">42 members · invited by Sarah M.</div></div>
+          <span class="group-badge" style="background:#FAE8E3;color:#C4694F;">Admin</span>
+        </div>
+        <div class="group-avatars" style="margin-top:10px;">
+          <div class="avatar" style="background:#C4694F;color:#fff;font-size:10px;">SM</div>
+          <div class="avatar" style="background:#7A9E7E;color:#fff;font-size:10px;">KR</div>
+          <div class="avatar" style="background:#4A5A8C;color:#fff;font-size:10px;">TT</div>
+          <div class="avatar" style="background:#D5CBBC;color:#7A6E60;font-size:10px;font-weight:800;">+39</div>
+        </div>
+      </div>
+
+      <div class="group-card">
+        <div class="group-top">
+          <div><div class="group-name">NYC Mamas</div><div class="group-meta">87 members · 3 mutual</div></div>
+          <span class="group-badge">Member</span>
+        </div>
+        <div class="group-avatars" style="margin-top:10px;">
+          <div class="avatar" style="background:#7A9E7E;color:#fff;font-size:10px;">NM</div>
+          <div class="avatar" style="background:#C4694F;color:#fff;font-size:10px;">AB</div>
+          <div class="avatar" style="background:#D5CBBC;color:#7A6E60;font-size:10px;font-weight:800;">+85</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <button onclick="go('s-join-group')" class="cta-btn secondary" style="font-size:13px;">+ Join another group</button>
+      </div>
+      <div style="height:16px;"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Settings -->
+  <div class="screen" id="s-settings">
+    <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+    <div class="topbar">
+      <button class="back-btn" onclick="go('s-home')"><svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5L7 12" stroke="#C4694F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <span class="topbar-title">Settings</span>
+    </div>
+    <div class="scroll-body">
+
+      <!-- Profile card -->
+      <div onclick="go('s-edit-profile')" style="display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid #E0D6C8;border-radius:16px;padding:14px 16px;margin-bottom:22px;margin-top:8px;cursor:pointer;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#C4694F;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0;">CH</div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:800;color:#231C12;">Cheryl</div>
+          <div style="font-size:12px;color:#7A6E60;margin-top:2px;">Mateo · 6 months · 12M</div>
+          <div style="font-size:11px;color:#C4694F;margin-top:3px;font-weight:600;">Edit profile →</div>
+        </div>
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" style="flex-shrink:0;"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="section-label">Account</div>
+      <div style="background:#fff;border:1.5px solid #E0D6C8;border-radius:14px;overflow:hidden;margin-bottom:16px;">
+        <div onclick="go('s-my-posts')" style="display:flex;align-items:center;padding:13px 14px;border-bottom:1px solid #F0E8DC;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">📦</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">My posts</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div onclick="go('s-my-groups')" style="display:flex;align-items:center;padding:13px 14px;border-bottom:1px solid #F0E8DC;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">🌱</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">My groups</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;padding:13px 14px;border-bottom:1px solid #F0E8DC;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">🔔</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">Notifications</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;padding:13px 14px;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">🔒</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">Privacy &amp; safety</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="section-label">Community</div>
+      <div style="background:#fff;border:1.5px solid #E0D6C8;border-radius:14px;overflow:hidden;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;padding:13px 14px;border-bottom:1px solid #F0E8DC;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">💌</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">Invite a friend</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;padding:13px 14px;cursor:pointer;">
+          <span style="font-size:17px;margin-right:12px;">❓</span>
+          <span style="font-size:13px;font-weight:600;color:#231C12;flex:1;">Help &amp; feedback</span>
+          <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="#BFB4A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <button style="width:100%;padding:13px;background:transparent;border:1.5px solid #E0D6C8;border-radius:99px;font-size:13px;font-weight:700;color:#C4694F;font-family:'Nunito',sans-serif;cursor:pointer;margin-bottom:8px;">Sign out</button>
+      <div style="text-align:center;font-size:11px;color:#BFB4A4;margin-top:8px;margin-bottom:16px;">Next Little v1.0 · A safe, verified parent community</div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  var target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+  }
+}
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+// ── Invite gate ──────────────────────────────────────────────
+var INVITE_DB = {
+  'NLSARAH7K2M': { name: 'Sarah M.',  since: '2024', location: 'Austin, TX' },
+  'NLKATE22NYC': { name: 'Kate R.',   since: '2023', location: 'New York, NY' },
+  'NLMIA2025':  { name: 'Mia T.',    since: '2025', location: 'Portland, OR' },
+};
+
+function onInviteType() {
+  document.getElementById('invite-error').style.display = 'none';
+  document.getElementById('invite-card').style.display = 'none';
+  document.getElementById('invite-continue-btn').style.display = 'none';
+  document.getElementById('invite-verify-btn').style.display = 'block';
+  document.getElementById('invite-input').style.borderColor = '#D5CBBC';
+}
+
+function verifyCode() {
+  var raw = document.getElementById('invite-input').value;
+  var key = raw.replace(/[-·\.\s]/g, '').toUpperCase();
+  var input = document.getElementById('invite-input');
+
+  if (key.length < 4) {
+    document.getElementById('invite-error').style.display = 'block';
+    input.style.borderColor = '#C4694F';
+    return;
+  }
+
+  // Look up — prototype accepts any code 6+ chars, maps to Sarah M. if unknown
+  var member = INVITE_DB[key] || (key.length >= 6
+    ? { name: 'Sarah M.', since: '2024', location: 'Austin, TX' }
+    : null);
+
+  if (!member) {
+    document.getElementById('invite-error').style.display = 'block';
+    input.style.borderColor = '#C4694F';
+    return;
+  }
+
+  // Valid — show card
+  input.style.borderColor = '#7A9E7E';
+  document.getElementById('invite-member-name').textContent = member.name;
+  document.getElementById('invite-member-meta').textContent = 'Member since ' + member.since + ' · ' + member.location;
+  document.getElementById('invite-card').style.display = 'block';
+  document.getElementById('invite-continue-btn').style.display = 'block';
+  document.getElementById('invite-verify-btn').style.display = 'none';
+  document.getElementById('invite-error').style.display = 'none';
+}
+
+// ── Checklist & post screen ─────────────────────────────────
+function toggleCheck(el) {
+  var box = el.querySelector('.check-box');
+  box.classList.toggle('checked');
+  box.textContent = box.classList.contains('checked') ? '✓' : '';
+  updatePostCta();
+}
+function updatePostCta() {
+  var boxes = document.querySelectorAll('#post-checklist .check-box');
+  var allChecked = Array.from(boxes).every(function(b){ return b.classList.contains('checked'); });
+  var cta = document.getElementById('post-cta');
+  var hint = document.getElementById('post-cta-hint');
+  if (cta) {
+    cta.style.opacity = allChecked ? '1' : '0.5';
+    cta.style.pointerEvents = allChecked ? 'auto' : 'none';
+  }
+  if (hint) hint.style.display = allChecked ? 'none' : 'block';
+}
+function toggleSizeChip(el) {
+  el.closest('.chip-wrap').querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+}
+
+// ── For you cards ────────────────────────────────────────────
+function dismissCard(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.transition = 'opacity 0.2s';
+    el.style.opacity = '0';
+    setTimeout(function(){ el.style.display = 'none'; }, 200);
+  }
+}
+
+function acceptItem() {
+  // Dismiss the nudge card and alert
+  dismissCard('nudge-item-available');
+  var alertEl = document.getElementById('alert-item-available');
+  if (alertEl) alertEl.style.display = 'none';
+  // Navigate to auto-populated message thread
+  go('s-message-thread');
+}
+
+// ── Join group: location enable ──────────────────────────────
+function enableLocation() {
+  var locked = document.getElementById('nearby-locked');
+  var groups = document.getElementById('nearby-groups');
+  if (locked) locked.style.display = 'none';
+  if (groups) groups.style.display = 'block';
+}
+
+// ── Post screen: category selection ─────────────────────────
+function selectPostCategory(el) {
+  // radio-style within category chips
+  document.querySelectorAll('#post-cat-chips .chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var cat = el.getAttribute('data-cat');
+  var clothingSection = document.getElementById('post-dynamic-clothing');
+  var ageSection = document.getElementById('post-dynamic-age');
+  if (cat === 'clothing') {
+    clothingSection.style.display = 'block';
+    ageSection.style.display = 'none';
+  } else if (cat === 'gear' || cat === 'toys' || cat === 'books') {
+    clothingSection.style.display = 'none';
+    ageSection.style.display = 'block';
+  } else {
+    clothingSection.style.display = 'none';
+    ageSection.style.display = 'none';
+  }
+}
+
+// ── Post screen: group selector ──────────────────────────────
+var _postGroupAll = true;
+var _postGroups = {};
+
+function togglePostGroup(id) {
+  var allBtn = document.getElementById('post-group-all');
+  var allCheck = allBtn.querySelector('div');
+
+  if (id === 'all') {
+    // toggle all-groups mode
+    _postGroupAll = !_postGroupAll;
+    _postGroups = {};
+    // clear individual selections
+    document.querySelectorAll('.post-group-row').forEach(function(row) {
+      var gid = row.getAttribute('data-gid');
+      _postGroups[gid] = false;
+      _renderGroupRow(row, false);
+    });
+    _renderAllBtn(allBtn, _postGroupAll);
+    return;
+  }
+
+  // individual group selected — deselect "all"
+  if (_postGroupAll) {
+    _postGroupAll = false;
+    _renderAllBtn(allBtn, false);
+  }
+
+  _postGroups[id] = !_postGroups[id];
+  var row = document.querySelector('.post-group-row[data-gid="' + id + '"]');
+  if (row) _renderGroupRow(row, _postGroups[id]);
+}
+
+function _renderAllBtn(btn, active) {
+  btn.style.borderColor = active ? '#7A9E7E' : '#E0D6C8';
+  var circle = btn.querySelector('div');
+  circle.style.background = active ? '#7A9E7E' : 'transparent';
+  circle.style.border = active ? 'none' : '1.5px solid #D5CBBC';
+  circle.innerHTML = active ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+}
+
+function _renderGroupRow(row, active) {
+  row.style.borderColor = active ? '#7A9E7E' : '#E0D6C8';
+  var circle = row.querySelector('.post-group-check');
+  circle.style.background = active ? '#7A9E7E' : 'transparent';
+  circle.style.border = active ? 'none' : '1.5px solid #D5CBBC';
+  circle.innerHTML = active ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+}
+
+// ── Size Chain ───────────────────────────────────────────────
+var CHAIN_MEMBERS = [
+  { name: 'Sofia R.',  parent: 'Nia T.',      initials: 'SR', age: 0,  ageLabel: '2 wks',  size: 'NB',     sizeRankVal: 0, location: 'Brooklyn, NY',   you: false, vouchedBy: 'Sarah M.', voucherInit: 'SM', itemsPassed: 2,  itemsReceived: 3,  groups: ['Brooklyn Parents'], chainPos: 'Receives from you' },
+  { name: 'Mia K.',   parent: 'Kate R.',      initials: 'MK', age: 1,  ageLabel: '6 wks',  size: '0–3M',   sizeRankVal: 1, location: 'Park Slope, NY', you: false, vouchedBy: 'Sarah M.', voucherInit: 'SM', itemsPassed: 5,  itemsReceived: 7,  groups: ['Brooklyn Parents', 'Park Slope Crew'], chainPos: 'Receives from you' },
+  { name: 'Leo T.',   parent: 'Tom T.',       initials: 'LT', age: 3,  ageLabel: '3 mo',   size: '3–6M',   sizeRankVal: 2, location: 'Brooklyn, NY',   you: false, vouchedBy: 'Kate R.',  voucherInit: 'KR', itemsPassed: 4,  itemsReceived: 6,  groups: ['Brooklyn Parents'], chainPos: 'Receives from you' },
+  { name: 'Ava C.',   parent: 'Carmen C.',    initials: 'AC', age: 5,  ageLabel: '5 mo',   size: '6–9M',   sizeRankVal: 3, location: 'NYC',            you: false, vouchedBy: 'Kate R.',  voucherInit: 'KR', itemsPassed: 3,  itemsReceived: 5,  groups: ['NYC Mamas'], chainPos: 'Receives from you' },
+  { name: 'Mateo',    parent: 'Cheryl',       initials: 'M',  age: 6,  ageLabel: '6 mo',   size: '12M',    sizeRankVal: 5, location: 'Brooklyn, NY',   you: true,  vouchedBy: 'Sarah M.', voucherInit: 'SM', itemsPassed: 3,  itemsReceived: 4,  groups: ['Brooklyn Parents', 'NYC Mamas'], chainPos: 'You' },
+  { name: 'Noah A.',  parent: 'David A.',     initials: 'NA', age: 8,  ageLabel: '8 mo',   size: '9–12M',  sizeRankVal: 4, location: 'Brooklyn, NY',   you: false, vouchedBy: 'Tom T.',   voucherInit: 'TT', itemsPassed: 6,  itemsReceived: 9,  groups: ['Brooklyn Parents'], chainPos: 'Passes to you' },
+  { name: 'Emma B.',  parent: 'Sarah B.',     initials: 'EB', age: 11, ageLabel: '11 mo',  size: '12–18M', sizeRankVal: 6, location: 'NYC',            you: false, vouchedBy: 'David A.', voucherInit: 'DA', itemsPassed: 8,  itemsReceived: 11, groups: ['Brooklyn Parents', 'NYC Mamas'], chainPos: 'Passes to you' },
+  { name: 'Lily S.',  parent: 'Michelle S.',  initials: 'LS', age: 14, ageLabel: '14 mo',  size: '18–24M', sizeRankVal: 7, location: 'Park Slope, NY', you: false, vouchedBy: 'Sarah B.', voucherInit: 'SB', itemsPassed: 10, itemsReceived: 14, groups: ['Brooklyn Parents', 'Park Slope Crew'], chainPos: 'Passes to you' },
+  { name: 'Jake M.',  parent: 'Marcus M.',    initials: 'JM', age: 20, ageLabel: '20 mo',  size: '2T',     sizeRankVal: 8, location: 'Brooklyn, NY',   you: false, vouchedBy: 'Sarah B.', voucherInit: 'SB', itemsPassed: 12, itemsReceived: 18, groups: ['Brooklyn Parents'], chainPos: 'Passes to you' },
+];
+
+var _chainSort = 'age';
+
+function chainToggle(mode) {
+  _chainSort = mode;
+  document.getElementById('tog-age').style.background  = mode === 'age'  ? '#C4694F' : '#F5EDE8';
+  document.getElementById('tog-age').style.color       = mode === 'age'  ? '#fff'    : '#A49080';
+  document.getElementById('tog-size').style.background = mode === 'size' ? '#C4694F' : '#F5EDE8';
+  document.getElementById('tog-size').style.color      = mode === 'size' ? '#fff'    : '#A49080';
+  renderChain();
+}
+
+function chainGroupTab(el) {
+  document.querySelectorAll('.chain-grp-tab').forEach(function(t) {
+    t.style.background = '#F5EDE8';
+    t.style.color = '#A49080';
+    t.classList.remove('active');
+  });
+  el.style.background = '#231C12';
+  el.style.color = '#fff';
+  el.classList.add('active');
+}
+
+// Interpolate between two hex colors by t (0–1)
+function lerpColor(a, b, t) {
+  var ah = parseInt(a.slice(1), 16), bh = parseInt(b.slice(1), 16);
+  var ar = ah >> 16, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
+  var br = bh >> 16, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+  var r = Math.round(ar + (br - ar) * t);
+  var g = Math.round(ag + (bg - ag) * t);
+  var bl2 = Math.round(ab + (bb - ab) * t);
+  return '#' + [r, g, bl2].map(function(v){ return v.toString(16).padStart(2,'0'); }).join('');
+}
+
+function renderChain() {
+  var list = document.getElementById('chain-list');
+  if (!list) return;
+  var sorted = CHAIN_MEMBERS.slice().sort(function(a, b) {
+    return _chainSort === 'age' ? b.age - a.age : b.sizeRankVal - a.sizeRankVal;
+  });
+  var total = sorted.length;
+  // Gradient: youngest/smallest = warm salmon → oldest/largest = slate indigo
+  var startColor = '#D4917F'; // warm salmon
+  var endColor   = '#4A5A8C'; // indigo
+  var html = '<div style="position:absolute;left:22px;top:28px;bottom:28px;width:2px;background:linear-gradient(to bottom,#D4917F44,#4A5A8C44);border-radius:2px;z-index:0;"></div>';
+  sorted.forEach(function(m, i) {
+    var isYou = m.you;
+    var t = total > 1 ? i / (total - 1) : 0.5;
+    var avatarColor = isYou ? '#C4694F' : lerpColor(startColor, endColor, t);
+    var cardBg      = isYou ? 'linear-gradient(135deg,#FAE8E3,#FEF0E8)' : '#fff';
+    var cardBorder  = isYou ? '#C4694F' : '#E8DFD4';
+    var nameCss     = 'font-size:13px;font-weight:800;color:' + (isYou ? '#C4694F' : '#231C12') + ';';
+    var youBadge    = isYou ? '<span style="font-size:10px;background:#C4694F;color:#fff;padding:2px 7px;border-radius:99px;font-weight:700;margin-left:5px;">you</span>' : '';
+    var parentLine  = isYou
+      ? '<div style="font-size:11px;color:#A49080;margin-top:1px;">' + m.ageLabel + ' · ' + m.size + '</div>'
+      : '<div style="font-size:11px;color:#7A6E60;margin-top:1px;">' + m.parent + ' · ' + m.ageLabel + ' · ' + m.size + '</div>';
+    var nameEsc = m.name.replace(/'/g, "\\'");
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:' + (i < total - 1 ? '8' : '0') + 'px;position:relative;z-index:1;">'
+      + '<div style="width:44px;height:44px;border-radius:50%;background:' + avatarColor + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;box-shadow:' + (isYou ? '0 0 0 3px #C4694F,0 0 0 5px #FAE8E3' : '0 2px 5px rgba(0,0,0,0.10)') + ';">' + m.initials + '</div>'
+      + '<div onclick="' + (isYou ? '' : 'viewChainMember(\'' + nameEsc + '\')') + '" style="flex:1;background:' + cardBg + ';border:1.5px solid ' + cardBorder + ';border-radius:13px;padding:9px 11px;display:flex;align-items:center;gap:8px;' + (isYou ? '' : 'cursor:pointer;') + '">'
+        + '<div style="flex:1;min-width:0;">'
+          + '<div style="display:flex;align-items:center;">'
+            + '<span style="' + nameCss + '">' + m.name + '</span>' + youBadge
+          + '</div>'
+          + parentLine
+        + '</div>'
+        + (isYou ? '' :
+          '<button onclick="event.stopPropagation(); go(\'s-message\')" style="width:30px;height:30px;border-radius:50%;background:#F5EDE8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+          + '<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 2h10a1 1 0 011 1v6a1 1 0 01-1 1H5l-3 2V3a1 1 0 011-1z" stroke="#A49080" stroke-width="1.4" stroke-linejoin="round"/></svg>'
+          + '</button>')
+      + '</div>'
+    + '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// ── Age & size auto-population ──────────────────────────────
+var BIRTH_MONTH = 8; // September (0-indexed)
+var BIRTH_YEAR  = 2025;
+// Prototype override: user has manually set 12M (ahead of age)
+var USER_SIZE   = '12M';
+
+function calcAgeMonths(birthMonth, birthYear) {
+  var now = new Date();
+  return Math.max(0, (now.getFullYear() - birthYear) * 12 + (now.getMonth() - birthMonth));
+}
+
+function ageLabel(m) {
+  if (m < 1)  return 'Newborn';
+  if (m === 1) return '1 month';
+  if (m < 12) return m + ' months';
+  var y = Math.floor(m / 12), mo = m % 12;
+  if (mo === 0) return y === 1 ? '1 year' : y + ' years';
+  return y + 'y ' + mo + 'mo';
+}
+
+function ageToSize(m) {
+  if (m < 1)  return 'NB';
+  if (m < 3)  return '0–3M';
+  if (m < 6)  return '3–6M';
+  if (m < 9)  return '6–9M';
+  if (m < 12) return '9–12M';
+  if (m < 18) return '12–18M';
+  if (m < 24) return '18–24M';
+  if (m < 36) return '2T';
+  if (m < 48) return '3T';
+  return '4T+';
+}
+
+// Size order for "ahead / behind" comparison
+var SIZE_ORDER = ['NB','0–3M','3–6M','6–9M','9–12M','12M','12–18M','18–24M','2T','3T','4T+'];
+function sizeRank(s) {
+  var i = SIZE_ORDER.indexOf(s);
+  return i === -1 ? 5 : i; // default mid if unknown
+}
+
+function populateOb1() {
+  var months = calcAgeMonths(BIRTH_MONTH, BIRTH_YEAR);
+  var defaultSize = ageToSize(months);
+
+  // Age field
+  document.getElementById('ob1-age-text').textContent = ageLabel(months);
+
+  // Size field — use user override if set, otherwise default
+  var displaySize = USER_SIZE || defaultSize;
+  document.getElementById('ob1-size-text').textContent = displaySize;
+
+  // Badge
+  var badge = document.getElementById('ob1-size-badge');
+  var diff = sizeRank(displaySize) - sizeRank(defaultSize);
+  if (diff > 0) {
+    badge.textContent = 'Ahead of age ✦';
+    badge.style.background = '#FEF0E0'; badge.style.color = '#A05820';
+    badge.style.display = 'inline-block';
+  } else if (diff < 0) {
+    badge.textContent = 'Behind age';
+    badge.style.background = '#EAF0EA'; badge.style.color = '#3A6A3A';
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function populateOb4() {
+  var months = calcAgeMonths(BIRTH_MONTH, BIRTH_YEAR);
+  var defaultSize = ageToSize(months);
+  var diff = sizeRank(USER_SIZE) - sizeRank(defaultSize);
+  var note = document.getElementById('ob4-size-note');
+  if (!note) return;
+
+  if (diff > 0) {
+    note.style.background = '#FEF0E0';
+    note.style.border = '1.5px solid #F0D0A8';
+    note.style.color = '#A05820';
+    note.innerHTML = '⬆️ Since Mateo is wearing ahead of his age, our smart match will slot him in the right spot when clothing is being passed to him!';
+    note.style.display = 'block';
+  } else if (diff < 0) {
+    note.style.background = '#EAF0EA';
+    note.style.border = '1.5px solid #C8D4C8';
+    note.style.color = '#3A6A3A';
+    note.innerHTML = '⬇️ Since Mateo is wearing behind his age, our smart match will slot him in the right spot when clothing is being passed to him!';
+    note.style.display = 'block';
+  } else {
+    note.style.display = 'none';
+  }
+}
+
+function populateEditProfile() {
+  var months = calcAgeMonths(BIRTH_MONTH, BIRTH_YEAR);
+  var ageText = document.getElementById('ep-age-text');
+  if (ageText) ageText.textContent = ageLabel(months);
+  var defaultSize = ageToSize(months);
+  var sizeText = document.getElementById('ep-size-text');
+  if (sizeText) sizeText.textContent = USER_SIZE;
+  var badge = document.getElementById('ep-size-badge');
+  if (badge) {
+    var diff = sizeRank(USER_SIZE) - sizeRank(defaultSize);
+    if (diff !== 0) {
+      badge.textContent = diff > 0 ? '↑ Ahead of age' : '↓ Behind age';
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
+// ── Member profile ──────────────────────────────────────────
+var _viewingMember = null;
+
+function viewChainMember(name) {
+  _viewingMember = null;
+  for (var i = 0; i < CHAIN_MEMBERS.length; i++) {
+    if (CHAIN_MEMBERS[i].name === name) { _viewingMember = CHAIN_MEMBERS[i]; break; }
+  }
+  if (!_viewingMember) return;
+  renderMemberProfile();
+  go('s-member-profile');
+}
+
+function renderMemberProfile() {
+  var m = _viewingMember;
+  if (!m) return;
+
+  // Gradient color matching chain position (reuse lerpColor)
+  var sortedForColor = CHAIN_MEMBERS.slice().sort(function(a,b){ return b.age - a.age; });
+  var total = sortedForColor.length;
+  var idx = 0;
+  for (var fi = 0; fi < sortedForColor.length; fi++) { if (sortedForColor[fi].name === m.name) { idx = fi; break; } }
+  var t = total > 1 ? idx / (total - 1) : 0.5;
+  var color = m.you ? '#C4694F' : lerpColor('#D4917F', '#4A5A8C', t);
+
+  // Avatar
+  var av = document.getElementById('mp-avatar');
+  if (av) { av.style.background = color; av.textContent = m.initials; }
+
+  // Names & location
+  setText('mp-kid-name', m.name);
+  setText('mp-topbar-title', m.name);
+  setText('mp-parent-name', 'Parent: ' + m.parent);
+  setText('mp-location-lbl', m.location);
+  setText('mp-age-lbl', m.ageLabel);
+  setText('mp-size-lbl', m.size);
+
+  // Stats
+  setText('mp-stat-passed', m.itemsPassed || 0);
+  setText('mp-stat-received', m.itemsReceived || 0);
+
+  // Chain position
+  var pos = document.getElementById('mp-chain-pos');
+  if (pos) {
+    pos.textContent = m.chainPos || '—';
+    var isReceive = (m.chainPos || '').indexOf('Receives') !== -1;
+    pos.style.background = isReceive ? '#FAE8E3' : '#EAF0EA';
+    pos.style.color = isReceive ? '#C4694F' : '#3A6A3A';
+  }
+
+  // Vouched by
+  var vAv = document.getElementById('mp-voucher-avatar');
+  if (vAv) { vAv.textContent = m.voucherInit || '??'; }
+  setText('mp-voucher-name', m.vouchedBy || 'Sarah M.');
+
+  // Groups in common
+  var grpEl = document.getElementById('mp-groups');
+  if (grpEl && m.groups) {
+    grpEl.innerHTML = m.groups.map(function(g) {
+      return '<span style="font-size:12px;background:#FAF6F0;color:#7A6E60;padding:5px 12px;border-radius:99px;border:1.5px solid #E0D6C8;font-weight:600;">' + g + '</span>';
+    }).join('');
+  }
+
+  // Message button label
+  var btn = document.getElementById('mp-message-btn');
+  if (btn) btn.textContent = 'Message ' + m.parent;
+}
+
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+// ── Item received confirm ────────────────────────────────────
+function toggleRecvCheck(el) {
+  var box = el.querySelector('.check-box');
+  box.classList.toggle('checked');
+  box.textContent = box.classList.contains('checked') ? '✓' : '';
+  updateRecvCta();
+}
+
+function updateRecvCta() {
+  var c1 = document.querySelector('#recv-check-1 .check-box');
+  var c2 = document.querySelector('#recv-check-2 .check-box');
+  var allChecked = c1 && c2 && c1.classList.contains('checked') && c2.classList.contains('checked');
+  var cta = document.getElementById('recv-cta');
+  var hint = document.getElementById('recv-cta-hint');
+  if (cta) { cta.style.opacity = allChecked ? '1' : '0.5'; cta.style.pointerEvents = allChecked ? 'auto' : 'none'; }
+  if (hint) hint.style.display = allChecked ? 'none' : 'block';
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  populateOb1();
+  populateOb4();
+  populateEditProfile();
+  renderChain();
+});
+</script>
+</body>
+</html>
